@@ -6,30 +6,39 @@
         <option v-for="park in parks" v-bind:key="park.parkCode">{{ park.fullName }}</option>
       </datalist>
     </div>
+
     <div v-for="park in parks" v-bind:key="park.parkCode">
       <h3>{{ park.fullName }}</h3>
       <img v-bind:src="park.images[0].url" v-bind:key="park.parkCode" alt="" style="width: 25%" />
       <div>
         <button v-on:click="parksShow(park)">details</button>
-        <!-- <a v-bind:href="`/parks/show`">More info</a> -->
       </div>
     </div>
 
     <dialog id="park-details" style="width: 60%">
       <form method="dialog">
         <h1>{{ currentPark.fullName }}</h1>
-        <!-- <h3>{{ currentPark.images[0].url }}</h3> -->
+        <p>\/ this should an image carousel \/</p>
+
+        <div v-for="currentImage in currentImages" v-bind:key="currentImage.id">
+          <img v-bind:src="currentImage" v-bind:key="currentImage.id" alt="" style="width: 50%" />
+        </div>
+
         <h3>About</h3>
         <p>{{ currentPark.description }}</p>
+
         <h3>Activities</h3>
-        <div>
-          <datalist id="park-activities">
-            <option v-for="activity in activities" v-bind:key="activity.id">">{{ activity["name"] }}</option>
-          </datalist>
-        </div>
-        <!-- <p>{{ currentPark.activities["name"] }}</p> -->
+        <p>{{ currentActivities }}</p>
+
         <h3>Weather</h3>
         <p>{{ currentPark.weatherInfo }}</p>
+
+        <h3>Directions</h3>
+        <p>{{ currentPark.directionsInfo }}</p>
+
+        <h3>Entrance Fees</h3>
+        <p>{{ currentPark.entranceFees }}</p>
+
         <button>Close</button>
       </form>
     </dialog>
@@ -46,8 +55,9 @@ export default {
   data: function () {
     return {
       parks: {},
-      activities: {},
+      currentActivities: {},
       currentPark: {},
+      currentImages: {},
     };
   },
   created: function () {
@@ -65,10 +75,29 @@ export default {
       // add 10 to the 'limit' param in the NPS search URL
     },
     parksShow: function (park) {
-      console.log("show a park", park);
-      console.log("show this park's activities", park.activities);
+      console.log("show current park", park);
+      console.log("current park's activities", park.activities);
       this.currentPark = park;
-      this.currentActivities = park.activities;
+
+      // get park's images
+      var images = [];
+      var i = 0;
+      while (i < park.images.length) {
+        images.push(park.images[i]["url"]);
+        i++;
+      }
+      this.currentImages = images;
+      console.log(this.currentImages);
+
+      // get park's activities
+      var activities = [];
+      i = 0;
+      while (i < park.activities.length) {
+        activities.push(park.activities[i]["name"]);
+        i++;
+      }
+      console.log(activities);
+      this.currentActivities = activities.sort().join(", ");
 
       document.querySelector("#park-details").showModal();
     },
