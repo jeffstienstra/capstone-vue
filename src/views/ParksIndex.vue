@@ -1,15 +1,12 @@
 <template>
   <div>
     <div>
-      <h1>Spot Dinos by Exploring the National Parks!</h1>
-      <datalist id="park-titles">
-        <option v-for="park in parks" v-bind:key="park.parkCode">{{ park.fullName }}</option>
-      </datalist>
+      <h1>Explore the National Parks to see which dinosaur lives there!</h1>
     </div>
 
-    <div v-for="park in parks" v-bind:key="park.parkCode">
+    <div v-for="park in parks" v-bind:key="park.id">
       <h3>{{ park.fullName }}</h3>
-      <img v-bind:src="park.images[0].url" v-bind:key="park.parkCode" alt="" style="width: 25%" />
+      <img v-bind:src="park.images[0].url" v-bind:key="park.id" alt="" style="width: 25%" />
       <div>
         <button v-on:click="parksShow(park)">details</button>
       </div>
@@ -17,8 +14,12 @@
 
     <dialog id="park-details" style="width: 60%">
       <form method="dialog">
+        <input v-on:click="addFavorite(currentPark)" type="button" value="+Favorites" style="float: right" />
+        <button float:right>Close</button>
+        <!-- <button type="button" class="close" data-dismiss="modal">Close</button> -->
+
         <h1>{{ currentPark.fullName }}</h1>
-        <p>\/ this should an image carousel \/</p>
+        <p>\/ this should be an image carousel \/</p>
 
         <div v-for="currentImage in currentImages" v-bind:key="currentImage.id">
           <img v-bind:src="currentImage" v-bind:key="currentImage.id" alt="" style="width: 50%" />
@@ -39,7 +40,7 @@
         <h3>Entrance Fees</h3>
         <p>{{ currentPark.entranceFees }}</p>
 
-        <button>Close</button>
+        <!-- <button>Close</button> -->
       </form>
     </dialog>
     <!-- \/ how to get the next 10 parks? \/ -->
@@ -58,6 +59,10 @@ export default {
       currentActivities: {},
       currentPark: {},
       currentImages: {},
+      park_name: "",
+      address: "",
+      parkCode: "",
+      image_url: "",
     };
   },
   created: function () {
@@ -75,8 +80,8 @@ export default {
       // add 10 to the 'limit' param in the NPS search URL
     },
     parksShow: function (park) {
-      console.log("show current park", park);
-      console.log("current park's activities", park.activities);
+      console.log("Current Park", park);
+      console.log("Current Park's Activities", park.activities);
       this.currentPark = park;
 
       // get park's images
@@ -87,7 +92,6 @@ export default {
         i++;
       }
       this.currentImages = images;
-      console.log(this.currentImages);
 
       // get park's activities
       var activities = [];
@@ -96,10 +100,29 @@ export default {
         activities.push(park.activities[i]["name"]);
         i++;
       }
-      console.log(activities);
       this.currentActivities = activities.sort().join(", ");
 
       document.querySelector("#park-details").showModal();
+    },
+
+    addFavorite: function (park) {
+      var params = {
+        park_name: park.fullName,
+        address:
+          park["addresses"][0]["line1"] +
+          " " +
+          park["addresses"][0]["city"] +
+          ", " +
+          park["addresses"][0]["stateCode"] +
+          " " +
+          park["addresses"][0]["postalCode"],
+        parkCode: park.parkCode,
+        image_url: park.images[0]["url"],
+      };
+      axios.post("/favorites", params).then((response) => {
+        console.log("added to favorites", response);
+        this.favorites = response.data.data;
+      });
     },
   },
 };
