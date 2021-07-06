@@ -1,11 +1,13 @@
 <template>
   <div>
     <h1>Favorites</h1>
+    <p>________________________________________</p>
     <div v-for="favorite in favorites" v-bind:key="favorite.id">
       <h3>{{ favorite.park_name }}</h3>
       <img v-bind:src="favorite.image_url" v-bind:key="favorite.id" alt="" style="width: 25%" />
       <div>
         <button v-on:click="parkShow(park)">details</button>
+        <p>________________________________________</p>
       </div>
     </div>
 
@@ -28,13 +30,13 @@
         <p>{{ currentActivities }}</p>
 
         <h3>Weather</h3>
-        <p>{{ park.weatherInfo }}</p>
+        <p>{{ favorite.weatherInfo }}</p>
 
         <h3>Directions</h3>
-        <p>{{ park.directionsInfo }}</p>
+        <p>{{ favorite.directionsInfo }}</p>
 
         <h3>Entrance Fees</h3>
-        <p>{{ park.entranceFees }}</p>
+        <p>{{ favorite.entranceFees }}</p>
 
         <!-- <button>Close</button> -->
       </form>
@@ -53,8 +55,10 @@ export default {
       currentActivities: {},
       currentImages: {},
       favorites: {},
+      myFavorites: {},
       favorite: {},
       park: {},
+      parkCode: {},
     };
   },
   created: function () {
@@ -65,19 +69,31 @@ export default {
       axios.get("/favorites").then((response) => {
         console.log("Favorites ->", response);
         this.favorites = response.data;
+
+        var myFavorites = [];
+        var i = 0;
+        while (i < this.favorites.length) {
+          if (this.favorites[i].user_id == 1) {
+            //  /\ how to find current_user_id?? /\
+
+            myFavorites.push(this.favorites[i]);
+          }
+          i++;
+        }
+        console.log("my favorites->", myFavorites);
       });
     },
     parkShow: function (park) {
       axios.get("parks/" + park.parkCode).then((response) => {
         console.log("This Favorite ->", response);
-        var favorite = response.data.data[0];
-        console.log("favorite->", favorite);
+        this.favorite = response.data.data[0];
+        console.log("favorite->", this.favorite);
 
         // get favorite's images
         var images = [];
         var i = 0;
-        while (i < favorite.images.length) {
-          images.push(favorite.images[i]["url"]);
+        while (i < this.favorite.images.length) {
+          images.push(this.favorite.images[i]["url"]);
           i++;
         }
         this.currentImages = images;
@@ -85,8 +101,8 @@ export default {
         // get park's activities
         var activities = [];
         i = 0;
-        while (i < favorite.activities.length) {
-          activities.push(favorite.activities[i]["name"]);
+        while (i < this.favorite.activities.length) {
+          activities.push(this.favorite.activities[i]["name"]);
           i++;
         }
         this.currentActivities = activities.sort().join(", ");
