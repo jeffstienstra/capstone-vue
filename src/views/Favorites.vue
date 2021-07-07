@@ -2,11 +2,12 @@
   <div>
     <h1>Favorites</h1>
     <p>________________________________________</p>
-    <div v-for="favorite in favorites" v-bind:key="favorite.id">
+    <div v-for="favorite in myFavorites" v-bind:key="favorite.id">
       <h3>{{ favorite.park_name }}</h3>
       <img v-bind:src="favorite.image_url" v-bind:key="favorite.id" alt="" style="width: 25%" />
       <div>
-        <button v-on:click="parkShow(park)">details</button>
+        <button v-on:click="parkShow(park)">Details</button>
+        <button v-on:click="addJournal()">+Journal</button>
         <p>________________________________________</p>
       </div>
     </div>
@@ -14,6 +15,7 @@
     <!-- modal -->
     <dialog id="park-details" style="width: 60%">
       <form method="dialog">
+        <button v-on:click="destroyPark(favorite)">Remove</button>
         <button float:right>Close</button>
         <!-- <button type="button" class="close" data-dismiss="modal">Close</button> -->
         <h1>{{ favorite.fullName }}</h1>
@@ -58,7 +60,7 @@ export default {
       myFavorites: {},
       favorite: {},
       park: {},
-      parkCode: {},
+      // parkCode: {},
     };
   },
   created: function () {
@@ -68,25 +70,13 @@ export default {
     favoritesIndex: function () {
       axios.get("/favorites").then((response) => {
         console.log("Favorites ->", response);
-        this.favorites = response.data;
-
-        var myFavorites = [];
-        var i = 0;
-        while (i < this.favorites.length) {
-          if (this.favorites[i].user_id == 1) {
-            //  /\ how to find current_user_id?? /\
-
-            myFavorites.push(this.favorites[i]);
-          }
-          i++;
-        }
-        console.log("my favorites->", myFavorites);
+        this.myFavorites = response.data;
       });
     },
     parkShow: function (park) {
-      axios.get("parks/" + park.parkCode).then((response) => {
+      axios.get(`parks/${park.parkCode}`).then((response) => {
         console.log("This Favorite ->", response);
-        this.favorite = response.data.data[0];
+        this.favorite = response.data.data[0]; // <-hard-coded for now. can't get park.parkCode to pass in params
         console.log("favorite->", this.favorite);
 
         // get favorite's images
@@ -110,6 +100,16 @@ export default {
         document.querySelector("#park-details").showModal();
       });
     },
+    destroyPark: function (favorite) {
+      console.log("destroy favorite", favorite);
+      axios.delete(`/favorites/${favorite.parkCode}`).then((response) => {
+        console.log("Destroy successful", response.data);
+        window.location.reload();
+        favorite = {};
+        // this.$router.push("/favorites");
+      });
+    },
+    addJournal: function () {},
   },
 };
 </script>
