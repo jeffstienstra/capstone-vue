@@ -9,7 +9,7 @@
         <button v-on:click="destroyFavorite(favorite)">Remove</button>
         <button v-on:click="favoriteShow(favorite)">Park Details</button>
         <button v-on:click="showJournals(favorite)">Field Notes</button>
-        <button v-on:click="addJournal(favorite)">+</button>
+        <button v-on:click="showCreateJournalModal(favorite)">Add Field Note</button>
         <p>________________________________________</p>
       </div>
     </div>
@@ -40,12 +40,10 @@
 
         <h3>Entrance Fees</h3>
         <p>{{ entranceFee }}</p>
-
-        <!-- <button>Close</button> -->
       </form>
     </dialog>
 
-    <!-- journals modal -->
+    <!-- show all journals of favorite park modal -->
     <dialog id="journals" style="width: 60%">
       <form method="dialog">
         <div>
@@ -60,9 +58,53 @@
 
           <p>{{ journal.body }}</p>
           <button v-on:click="destroyJournal(journal)">Delete</button>
-          <button v-on:click="editJournal(journal)">Edit</button>
+          <button v-on:click="showJournal(journal)">Edit</button>
           <p>________________________________________</p>
         </div>
+      </form>
+    </dialog>
+
+    <!-- edit a journal of favorite park -->
+    <dialog id="journal-update" style="width: 60%">
+      <form v-on:submit.prevent="updateJournal(updateJournalParams)">
+        <button>Cancel</button>
+
+        <h1>Edit Post</h1>
+        <div>
+          <label>Date:</label>
+          <input type="text" v-model="updateJournalParams.date" />
+        </div>
+        <div>
+          <label>Title:</label>
+          <input type="text" v-model="updateJournalParams.title" />
+        </div>
+        <div>
+          <label>Body:</label>
+          <input type="text" v-model="updateJournalParams.body" />
+        </div>
+        <input type="submit" value="Submit" />
+      </form>
+    </dialog>
+
+    <!-- create a journal to favorite park -->
+    <dialog id="journal-create" style="width: 60%">
+      <form v-on:submit.prevent="createJournal(favorite)">
+        <button>Cancel</button>
+
+        <h1>New Field Note</h1>
+        <div>
+          <label>Date:</label>
+          <input type="text" v-model="createJournalParams.date" />
+        </div>
+        <div>
+          <label>Title:</label>
+          <input type="text" v-model="createJournalParams.title" />
+        </div>
+        <div>
+          <label>Body:</label>
+          <input type="text" v-model="createJournalParams.body" />
+        </div>
+        <input type="submit" value="Submit" />
       </form>
     </dialog>
   </div>
@@ -84,6 +126,8 @@ export default {
       park: {},
       journals: {},
       entranceFee: {},
+      updateJournalParams: {},
+      createJournalParams: {},
     };
   },
   created: function () {
@@ -121,7 +165,7 @@ export default {
 
         // format entranceFee fee
         console.log(this.favorite.entranceFees[0]);
-        var entranceFee = `$${this.favorite.entranceFees[0]["cost"]} 
+        var entranceFee = `$${this.favorite.entranceFees[0]["cost"]}
         ${this.favorite.entranceFees[0]["description"]}`;
         this.entranceFee = entranceFee;
 
@@ -138,13 +182,20 @@ export default {
       });
     },
     showJournals: function (favorite) {
-      console.log(favorite["journals"]);
+      console.log("all journals of this favorite", favorite["journals"]);
       this.journals = favorite["journals"];
       // axios.get(`journals/${journal.favorite_id}`).then((response) => {
       //   console.log("This journal ->", response);
       //   this.journal = response.data;
       //   console.log(this.journal);
       document.querySelector("#journals").showModal();
+      // });
+    },
+    showJournal: function (journal) {
+      console.log("this journal ->", journal);
+      this.updateJournalParams = journal;
+
+      document.querySelector("#journal-update").showModal();
       // });
     },
     destroyJournal: function (journal) {
@@ -154,11 +205,34 @@ export default {
         window.location.reload();
       });
     },
-    addJournal: function (favorite) {
-      console.log("add journal, favorite_id =", favorite.id);
+    showCreateJournalModal: function (favorite) {
+      this.favorite = favorite;
+      document.querySelector("#journal-create").showModal();
     },
-    editJournal: function (journal) {
-      console.log("edit journal, id = ", journal.id);
+    createJournal: function (favorite) {
+      this.favorite = favorite;
+      this.createJournalParams.favorite_id = favorite.id;
+      console.log("create journal ->", this.favorite, this.createJournalParams);
+      axios
+        .post(`/journals`, this.createJournalParams)
+        .then((response) => {
+          console.log(response.data);
+        })
+        .catch((error) => {
+          this.errors = error.response.data.errors;
+          console.log(this.errors);
+        });
+      window.location.reload();
+    },
+    updateJournal: function (updateJournalParams) {
+      console.log("edit journal", updateJournalParams);
+      axios.patch(`journals/${updateJournalParams.id}`, updateJournalParams).then((response) => {
+        console.log("web response ->", response.data);
+        // document.querySelector("#journal-update").style.display = "none";
+        // document.querySelector("#journals").showModal();
+
+        window.location.reload();
+      });
     },
   },
 };
