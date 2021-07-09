@@ -38,7 +38,7 @@
         <p>{{ currentPark.directionsInfo }}</p>
 
         <h3>Entrance Fees</h3>
-        <p>{{ currentPark.entranceFees }}</p>
+        <p>{{ entranceFee }}</p>
 
         <!-- <button>Close</button> -->
       </form>
@@ -63,6 +63,7 @@ export default {
       address: "",
       parkCode: "",
       image_url: "",
+      entranceFee: {},
     };
   },
   created: function () {
@@ -100,6 +101,12 @@ export default {
         activities.push(park.activities[i]["name"]);
         i++;
       }
+
+      // format entrance fee
+      console.log(park.entranceFees[0]);
+      var entranceFee = `$${park.entranceFees[0]["cost"]} 
+        ${park.entranceFees[0]["description"]}`;
+      this.entranceFee = entranceFee;
       this.currentActivities = activities.sort().join(", ");
 
       document.querySelector("#park-details").showModal();
