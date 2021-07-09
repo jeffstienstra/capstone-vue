@@ -44,7 +44,7 @@
       </form>
     </dialog>
     <!-- \/ how to get the next 10 parks? \/ -->
-    <button v-on:click="moreParks()">next ></button>
+    <button v-on:click="moreParks()">more... ></button>
     <!-- <a v-bind:href="`/parks/`">next</a> -->
   </div>
 </template>
@@ -72,7 +72,7 @@ export default {
     parksIndex: function () {
       axios.get("/parks").then((response) => {
         console.log("Parks ->", response);
-        this.parks = response.data.data;
+        this.parks = response.data;
       });
     },
     moreParks: function () {

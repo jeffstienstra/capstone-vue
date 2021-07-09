@@ -6,7 +6,8 @@
       <h3>{{ favorite.park_name }}</h3>
       <img v-bind:src="favorite.image_url" v-bind:key="favorite.id" alt="" style="width: 25%" />
       <div>
-        <button v-on:click="parkShow(park)">Details</button>
+        <button v-on:click="favoriteShow(favorite)">Park Details</button>
+        <button v-on:click="showJournals()">Journals</button>
         <button v-on:click="addJournal()">+Journal</button>
         <p>________________________________________</p>
       </div>
@@ -73,11 +74,11 @@ export default {
         this.myFavorites = response.data;
       });
     },
-    parkShow: function (park) {
-      axios.get(`parks/${park.parkCode}`).then((response) => {
+    favoriteShow: function (favorite) {
+      axios.get(`parks/${favorite.parkCode}`).then((response) => {
         console.log("This Favorite ->", response);
-        this.favorite = response.data.data[0]; // <-hard-coded for now. can't get park.parkCode to pass in params
-        console.log("favorite->", this.favorite);
+        this.favorite = response.data[0]; // <-hard-coded for now. can't get park.parkCode to pass in params
+        // console.log("favorite->", this.favorite);
 
         // get favorite's images
         var images = [];
