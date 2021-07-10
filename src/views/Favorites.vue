@@ -20,6 +20,9 @@
         <button float:right>Close</button>
         <!-- <button type="button" class="close" data-dismiss="modal">Close</button> -->
         <h1>{{ favorite.fullName }}</h1>
+
+        <div id="map"></div>
+
         <p>\/ this should be an image carousel \/</p>
 
         <div v-for="currentImage in currentImages" v-bind:key="currentImage.id">
@@ -48,7 +51,7 @@
       <form method="dialog">
         <div>
           <!-- <input v-on:click="addJournal(favorite)" type="button" value="Add Field Note" /> -->
-          <button style="float: right">Close</button>
+          <button>Close</button>
         </div>
 
         <div v-for="journal in journals" v-bind:key="journal.id">
@@ -58,7 +61,7 @@
 
           <p>{{ journal.body }}</p>
           <button v-on:click="destroyJournal(journal)">Delete</button>
-          <button v-on:click="showJournal(journal)">Edit</button>
+          <button v-on:click="editJournal(journal)">Edit</button>
           <p>________________________________________</p>
         </div>
       </form>
@@ -110,7 +113,16 @@
   </div>
 </template>
 
+<style>
+#map {
+  width: 100%;
+  height: 300px;
+}
+</style>
+
 <script>
+/* global mapboxgl */
+
 import axios from "axios";
 
 export default {
@@ -170,6 +182,17 @@ export default {
         this.entranceFee = entranceFee;
 
         document.querySelector("#park-details").showModal();
+
+        mapboxgl.accessToken = process.env.VUE_APP_MAPBOX_API_KEY;
+        var map = new mapboxgl.Map({
+          container: "map", // container id
+          style: "mapbox://styles/mapbox/streets-v11", // style URL
+          center: [this.favorite.longitude, this.favorite.latitude], // starting position [lng, lat]
+          zoom: 12, // starting zoom
+        });
+
+        var marker1 = new mapboxgl.Marker().setLngLat([this.favorite.longitude, this.favorite.latitude]).addTo(map);
+        console.log(marker1, map);
       });
     },
     destroyFavorite: function (favorite) {
@@ -191,7 +214,7 @@ export default {
       document.querySelector("#journals").showModal();
       // });
     },
-    showJournal: function (journal) {
+    editJournal: function (journal) {
       console.log("this journal ->", journal);
       this.updateJournalParams = journal;
 

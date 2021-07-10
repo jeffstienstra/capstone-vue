@@ -12,13 +12,16 @@
       </div>
     </div>
 
-    <dialog id="park-details" style="width: 60%">
+    <dialog id="park-details" style="width: 65%">
       <form method="dialog">
         <input v-on:click="addFavorite(currentPark)" type="button" value="+Favorites" style="float: right" />
         <button float:right>Close</button>
         <!-- <button type="button" class="close" data-dismiss="modal">Close</button> -->
 
         <h1>{{ currentPark.fullName }}</h1>
+
+        <div id="map"></div>
+
         <p>\/ this should be an image carousel \/</p>
 
         <div v-for="currentImage in currentImages" v-bind:key="currentImage.id">
@@ -49,7 +52,20 @@
   </div>
 </template>
 
+<style>
+#map {
+  width: 100%;
+  height: 300px;
+}
+.mapboxgl-popup {
+  max-width: 400px;
+  font: 12px/20px "Helvetica Neue", Arial, Helvetica, sans-serif;
+}
+</style>
+
 <script>
+/* global mapboxgl */
+
 import axios from "axios";
 
 export default {
@@ -69,6 +85,7 @@ export default {
   created: function () {
     this.parksIndex();
   },
+
   methods: {
     parksIndex: function () {
       axios.get("/parks").then((response) => {
@@ -110,6 +127,27 @@ export default {
       this.currentActivities = activities.sort().join(", ");
 
       document.querySelector("#park-details").showModal();
+
+      mapboxgl.accessToken = process.env.VUE_APP_MAPBOX_API_KEY;
+      var map = new mapboxgl.Map({
+        container: "map", // container id
+        style: "mapbox://styles/jeffstienstra/ckqx6hkw40yp618mvdg4hbjoc", // style URL
+        center: [this.currentPark.longitude, this.currentPark.latitude], // starting position [lng, lat]
+        zoom: 12, // starting zoom
+      });
+
+      // create the popup
+      var popup = new mapboxgl.Popup({ offset: 25 }).setText(park.fullName);
+
+      // create DOM element for the marker
+      var el = document.createElement("div");
+      el.id = "marker";
+
+      var marker1 = new mapboxgl.Marker()
+        .setLngLat([this.currentPark.longitude, this.currentPark.latitude])
+        .setPopup(popup)
+        .addTo(map);
+      console.log(marker1, map);
     },
 
     addFavorite: function (park) {
