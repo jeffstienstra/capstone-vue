@@ -20,6 +20,20 @@
 
         <h1>{{ currentPark.fullName }}</h1>
 
+        <div id="menu">
+          <input
+            id="jeffstienstra/ckqxyevbn0mff17qgpmz4ned8"
+            type="radio"
+            name="rtoggle"
+            value="satellite"
+            checked="checked"
+          />
+          <label for="jeffstienstra/ckqxyevbn0mff17qgpmz4ned8">satellite</label>
+          <input id="jeffstienstra/ckqx6hkw40yp618mvdg4hbjoc" type="radio" name="rtoggle" value="terrain" />
+          <label for="jeffstienstra/ckqx6hkw40yp618mvdg4hbjoc">terrain</label>
+          <input id="jeffstienstra/ckqxyj14u1rsh17nvihai24i8" type="radio" name="rtoggle" value="dark" />
+          <label for="jeffstienstra/ckqxyj14u1rsh17nvihai24i8">dark</label>
+        </div>
         <div id="map"></div>
 
         <p>\/ this should be an image carousel \/</p>
@@ -52,10 +66,18 @@
 </template>
 
 <style>
-#map {
-  width: 100%;
-  height: 500px;
+body {
+  margin: 0;
+  padding: 0;
 }
+
+#map {
+  position: relative;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+}
+
 .mapboxgl-popup {
   max-width: 400px;
   font: 12px/20px "Helvetica Neue", Arial, Helvetica, sans-serif;
@@ -127,13 +149,27 @@ export default {
 
       document.querySelector("#park-details").showModal();
 
+      //    \/render map \/
       mapboxgl.accessToken = process.env.VUE_APP_MAPBOX_API_KEY;
       var map = new mapboxgl.Map({
         container: "map", // container id
-        style: "mapbox://styles/jeffstienstra/ckqx6hkw40yp618mvdg4hbjoc", // style URL
+        style: "mapbox://styles/jeffstienstra/ckqxyevbn0mff17qgpmz4ned8", // style URL
         center: [this.currentPark.longitude, this.currentPark.latitude], // starting position [lng, lat]
-        zoom: 12, // starting zoom
+        zoom: 15, // starting zoom
       });
+      var layerList = document.getElementById("menu");
+      var inputs = layerList.getElementsByTagName("input");
+
+      //    \/ set up map styles toggle \/
+      function switchLayer(layer) {
+        var layerId = layer.target.id;
+        console.log(layerId);
+        map.setStyle("mapbox://styles/" + `${layerId}`);
+      }
+
+      for (i = 0; i < inputs.length; i++) {
+        inputs[i].onclick = switchLayer;
+      }
 
       // create the popup
       var popup = new mapboxgl.Popup({ offset: 0 }).setHTML(`<p><strong>${park.fullName}</strong><br>
