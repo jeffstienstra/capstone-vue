@@ -23,7 +23,6 @@
         <div id="map"></div>
 
         <p>\/ this should be an image carousel \/</p>
-
         <div v-for="currentImage in currentImages" v-bind:key="currentImage.id">
           <img v-bind:src="currentImage" v-bind:key="currentImage.id" alt="" style="width: 50%" />
         </div>
@@ -55,7 +54,7 @@
 <style>
 #map {
   width: 100%;
-  height: 300px;
+  height: 500px;
 }
 .mapboxgl-popup {
   max-width: 400px;
@@ -121,7 +120,7 @@ export default {
 
       // format entrance fee
       console.log(park.entranceFees[0]);
-      var entranceFee = `$${park.entranceFees[0]["cost"]} 
+      var entranceFee = `$${park.entranceFees[0]["cost"]}
         ${park.entranceFees[0]["description"]}`;
       this.entranceFee = entranceFee;
       this.currentActivities = activities.sort().join(", ");
@@ -137,7 +136,9 @@ export default {
       });
 
       // create the popup
-      var popup = new mapboxgl.Popup({ offset: 25 }).setText(park.fullName);
+      var popup = new mapboxgl.Popup({ offset: 0 }).setHTML(`<p><strong>${park.fullName}</strong><br>
+      ${park.addresses[0]["line1"]}<br>${park.addresses[0]["city"]}, ${park.addresses[0]["stateCode"]} ${park.addresses[0]["postalCode"]}<br>
+      Get park alerts and driving directions <a href="http://www.nps.gov/abli/planyourvisit/directions.htm" target="_blank">here</a></p>`);
 
       // create DOM element for the marker
       var el = document.createElement("div");
