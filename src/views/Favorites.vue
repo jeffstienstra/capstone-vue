@@ -21,6 +21,20 @@
         <!-- <button type="button" class="close" data-dismiss="modal">Close</button> -->
         <h1>{{ favorite.fullName }}</h1>
 
+        <div id="menu">
+          <input
+            id="jeffstienstra/ckqxyevbn0mff17qgpmz4ned8"
+            type="radio"
+            name="rtoggle"
+            value="satellite"
+            checked="checked"
+          />
+          <label for="jeffstienstra/ckqxyevbn0mff17qgpmz4ned8">satellite</label>
+          <input id="jeffstienstra/ckqx6hkw40yp618mvdg4hbjoc" type="radio" name="rtoggle" value="terrain" />
+          <label for="jeffstienstra/ckqx6hkw40yp618mvdg4hbjoc">terrain</label>
+          <input id="jeffstienstra/ckqxyj14u1rsh17nvihai24i8" type="radio" name="rtoggle" value="dark" />
+          <label for="jeffstienstra/ckqxyj14u1rsh17nvihai24i8">dark</label>
+        </div>
         <div id="map"></div>
 
         <p>\/ this should be an image carousel \/</p>
@@ -114,9 +128,22 @@
 </template>
 
 <style>
+body {
+  margin: 0;
+  padding: 0;
+}
+
 #map {
-  width: 100%;
+  position: relative;
   height: 300px;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+}
+
+.mapboxgl-popup {
+  max-width: 400px;
+  font: 12px/20px "Helvetica Neue", Arial, Helvetica, sans-serif;
 }
 </style>
 
@@ -183,15 +210,41 @@ export default {
 
         document.querySelector("#park-details").showModal();
 
+        //    \/render map \/
         mapboxgl.accessToken = process.env.VUE_APP_MAPBOX_API_KEY;
         var map = new mapboxgl.Map({
           container: "map", // container id
-          style: "mapbox://styles/mapbox/streets-v11", // style URL
+          style: "mapbox://styles/jeffstienstra/ckqxyevbn0mff17qgpmz4ned8", // style URL
           center: [this.favorite.longitude, this.favorite.latitude], // starting position [lng, lat]
-          zoom: 12, // starting zoom
+          zoom: 15, // starting zoom
         });
+        var layerList = document.getElementById("menu");
+        var inputs = layerList.getElementsByTagName("input");
 
-        var marker1 = new mapboxgl.Marker().setLngLat([this.favorite.longitude, this.favorite.latitude]).addTo(map);
+        //    \/ set up map styles toggle \/
+        function switchLayer(layer) {
+          var layerId = layer.target.id;
+          console.log(layerId);
+          map.setStyle("mapbox://styles/" + `${layerId}`);
+        }
+
+        for (i = 0; i < inputs.length; i++) {
+          inputs[i].onclick = switchLayer;
+        }
+
+        // create the popup
+        var popup = new mapboxgl.Popup({ offset: 0 }).setHTML(`<p><strong>${this.favorite.fullName}</strong><br>
+      ${this.favorite.addresses[0]["line1"]}<br>${this.favorite.addresses[0]["city"]}, ${this.favorite.addresses[0]["stateCode"]} ${this.favorite.addresses[0]["postalCode"]}<br>
+      Get park alerts and driving directions <a href="http://www.nps.gov/abli/planyourvisit/directions.htm" target="_blank">here</a></p>`);
+
+        // create DOM element for the marker
+        var el = document.createElement("div");
+        el.id = "marker";
+
+        var marker1 = new mapboxgl.Marker()
+          .setLngLat([this.favorite.longitude, this.favorite.latitude])
+          .setPopup(popup)
+          .addTo(map);
         console.log(marker1, map);
       });
     },

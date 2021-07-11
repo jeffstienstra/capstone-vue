@@ -73,6 +73,7 @@ body {
 
 #map {
   position: relative;
+  height: 300px;
   top: 0;
   bottom: 0;
   width: 100%;
