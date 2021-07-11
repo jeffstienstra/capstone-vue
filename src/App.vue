@@ -5,7 +5,7 @@
 
       <router-link style="padding: 0px 10px" to="/parks">Parks</router-link>
 
-      <router-link style="padding: 0px 10px" to="/dinos">Dinos</router-link>
+      <router-link style="padding: 0px 10px" to="/plants">Plants</router-link>
 
       <router-link style="padding: 0px 10px" v-if="isLoggedIn()" to="/favorites">Favorites</router-link>
 

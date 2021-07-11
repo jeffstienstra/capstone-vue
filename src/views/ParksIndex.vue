@@ -1,7 +1,7 @@
 <template>
   <div>
     <div>
-      <h1>Explore the National Parks to see which dinosaur lives there!</h1>
+      <h1>Explore the National Parks to spot some plants!</h1>
     </div>
 
     <div v-for="park in parks" v-bind:key="park.id">
@@ -31,8 +31,8 @@
           <label for="jeffstienstra/ckqxyevbn0mff17qgpmz4ned8">satellite</label>
           <input id="jeffstienstra/ckqx6hkw40yp618mvdg4hbjoc" type="radio" name="rtoggle" value="terrain" />
           <label for="jeffstienstra/ckqx6hkw40yp618mvdg4hbjoc">terrain</label>
-          <input id="jeffstienstra/ckqxyj14u1rsh17nvihai24i8" type="radio" name="rtoggle" value="dark" />
-          <label for="jeffstienstra/ckqxyj14u1rsh17nvihai24i8">dark</label>
+          <!-- <input id="jeffstienstra/ckqxyj14u1rsh17nvihai24i8" type="radio" name="rtoggle" value="dark" />
+          <label for="jeffstienstra/ckqxyj14u1rsh17nvihai24i8">dark</label> -->
         </div>
         <div id="map"></div>
 
@@ -173,9 +173,9 @@ export default {
       }
 
       // create the popup
-      var popup = new mapboxgl.Popup({ offset: 0 }).setHTML(`<p><strong>${park.fullName}</strong><br>
+      var popup = new mapboxgl.Popup({ offset: -5 }).setHTML(`<p><strong>${park.fullName}</strong><br>
       ${park.addresses[0]["line1"]}<br>${park.addresses[0]["city"]}, ${park.addresses[0]["stateCode"]} ${park.addresses[0]["postalCode"]}<br>
-      Get park alerts and driving directions <a href="http://www.nps.gov/abli/planyourvisit/directions.htm" target="_blank">here</a></p>`);
+      Get driving directions <a href='${park.directionsUrl}' target="_blank">here</a></p>`);
 
       // create DOM element for the marker
       var el = document.createElement("div");

@@ -10,6 +10,7 @@
         <button v-on:click="favoriteShow(favorite)">Park Details</button>
         <button v-on:click="showJournals(favorite)">Field Notes</button>
         <button v-on:click="showCreateJournalModal(favorite)">Add Field Note</button>
+        <button v-on:click="showFieldNotesMap(favorite)">Map</button>
         <p>________________________________________</p>
       </div>
     </div>
@@ -32,8 +33,8 @@
           <label for="jeffstienstra/ckqxyevbn0mff17qgpmz4ned8">satellite</label>
           <input id="jeffstienstra/ckqx6hkw40yp618mvdg4hbjoc" type="radio" name="rtoggle" value="terrain" />
           <label for="jeffstienstra/ckqx6hkw40yp618mvdg4hbjoc">terrain</label>
-          <input id="jeffstienstra/ckqxyj14u1rsh17nvihai24i8" type="radio" name="rtoggle" value="dark" />
-          <label for="jeffstienstra/ckqxyj14u1rsh17nvihai24i8">dark</label>
+          <!-- <input id="jeffstienstra/ckqxyj14u1rsh17nvihai24i8" type="radio" name="rtoggle" value="dark" />
+          <label for="jeffstienstra/ckqxyj14u1rsh17nvihai24i8">dark</label> -->
         </div>
         <div id="map"></div>
 
@@ -109,6 +110,8 @@
         <button>Cancel</button>
 
         <h1>New Field Note</h1>
+        <button v-on:click="confirmUserGeolocation()" type="button">Add Geolocation to Field Note</button>
+
         <div>
           <label>Date:</label>
           <input type="text" v-model="createJournalParams.date" />
@@ -180,6 +183,8 @@ export default {
       });
     },
     favoriteShow: function (favorite) {
+      console.log("Favorite parkCode ->", favorite.parkCode);
+
       axios.get(`parks/${favorite.parkCode}`).then((response) => {
         console.log("This Favorite ->", response);
         this.favorite = response.data[0];
@@ -203,7 +208,7 @@ export default {
         this.currentActivities = activities.sort().join(", ");
 
         // format entranceFee fee
-        console.log(this.favorite.entranceFees[0]);
+        // console.log(this.favorite.entranceFees[0]);
         var entranceFee = `$${this.favorite.entranceFees[0]["cost"]}
         ${this.favorite.entranceFees[0]["description"]}`;
         this.entranceFee = entranceFee;
@@ -224,7 +229,6 @@ export default {
         //    \/ set up map styles toggle \/
         function switchLayer(layer) {
           var layerId = layer.target.id;
-          console.log(layerId);
           map.setStyle("mapbox://styles/" + `${layerId}`);
         }
 
@@ -235,7 +239,7 @@ export default {
         // create the popup
         var popup = new mapboxgl.Popup({ offset: 0 }).setHTML(`<p><strong>${this.favorite.fullName}</strong><br>
       ${this.favorite.addresses[0]["line1"]}<br>${this.favorite.addresses[0]["city"]}, ${this.favorite.addresses[0]["stateCode"]} ${this.favorite.addresses[0]["postalCode"]}<br>
-      Get park alerts and driving directions <a href="http://www.nps.gov/abli/planyourvisit/directions.htm" target="_blank">here</a></p>`);
+      Get driving directions <a href='${this.favorite.directionsUrl}' target="_blank">here</a></p>`);
 
         // create DOM element for the marker
         var el = document.createElement("div");
@@ -309,6 +313,32 @@ export default {
 
         window.location.reload();
       });
+    },
+
+    confirmUserGeolocation: function () {
+      let confirmUserGeolocation = confirm("Would like to apply your GPS location to this Field Note?");
+      if (confirmUserGeolocation) {
+        const success = (position) => {
+          const { latitude, longitude } = position.coords;
+          this.latitude = latitude;
+          this.longitude = longitude;
+          console.log(`Your coordinates: ${this.latitude} lat and ${this.longitude} lng`);
+        };
+
+        const error = (err) => {
+          console.log(err);
+        };
+
+        navigator.geolocation.getCurrentPosition(success, error);
+
+        alert(`There you are! GPS Data successfully applied.`);
+      } else {
+        alert("Action canceled. No GPS Data was inspected.");
+      }
+    },
+
+    showFieldNotesMap: function (favorite) {
+      console.log("show field notes map", favorite);
     },
   },
 };
