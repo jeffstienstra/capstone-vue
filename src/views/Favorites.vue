@@ -291,8 +291,9 @@ export default {
     },
     createJournal: function (favorite) {
       this.favorite = favorite;
+      console.log(favorite);
       this.createJournalParams.favorite_id = favorite.id;
-      console.log("create journal ->", this.favorite, this.createJournalParams);
+      console.log("create journal ->", favorite, this.createJournalParams);
       axios
         .post(`/journals`, this.createJournalParams)
         .then((response) => {
