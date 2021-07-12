@@ -331,7 +331,7 @@ export default {
 
         navigator.geolocation.getCurrentPosition(success, error);
 
-        alert(`There you are! GPS Data successfully applied.`);
+        alert(`GPS Data successfully applied.`);
       } else {
         alert("Action canceled. No GPS Data was inspected.");
       }
