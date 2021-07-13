@@ -67,7 +67,20 @@
         </div>
         <div id="map"></div>
 
-        <p>\/ this should be an image carousel \/</p>
+        <div class="container">
+          <h3>Materialize Carousel Demo</h3>
+
+          <div class="carousel carousel-slider" id="demo-carousel-indicators" data-indicators="true">
+            <a class="carousel-item" href="#one!"><img v-bind:src="currentImages[0].url" /></a>
+
+            <a class="carousel-item" href="#two!"><img v-bind:src="currentImages[1].url" /></a>
+
+            <a class="carousel-item" href="#three!"><img v-bind:src="currentImages[2].url" /></a>
+
+            <a class="carousel-item" href="#four!"><img v-bind:src="currentImages[4].url" /></a>
+          </div>
+        </div>
+
         <div v-for="currentImage in currentImages" v-bind:key="currentImage.id">
           <img v-bind:src="currentImage" v-bind:key="currentImage.id" alt="" style="width: 50%" />
         </div>
@@ -144,6 +157,12 @@ export default {
       entranceFee: {},
     };
   },
+  mounted() {
+    document.ready(function () {
+      "#demo-carousel-indicators".carousel({ fullWidth: true });
+    });
+  },
+
   created: function () {},
 
   methods: {

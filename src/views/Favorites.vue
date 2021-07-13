@@ -2,7 +2,6 @@
   <div>
     <span v-title data-title="traVlog"></span>
 
-    <h1>Favorites</h1>
     <p>________________________________________</p>
     <div v-for="favorite in myFavorites" v-bind:key="favorite.id">
       <h3 style="color: #006400" v-if="favorite.visited">{{ favorite.park_name }}</h3>
@@ -182,6 +181,10 @@
 </template>
 
 <style>
+#popup-image {
+  max-width: 75%;
+  height: 100px;
+}
 .marker {
   background-image: url("https://res.cloudinary.com/nacho-files/image/upload/v1626147221/travlog_marker_white_kmufmr.png");
   background-size: cover;
@@ -475,9 +478,7 @@ export default {
       i = 0;
       for (i = 0; i < this.journals.length; i++) {
         var popup = new mapboxgl.Popup({ offset: 0 }).setHTML(
-          `<div>
-        <img v-bind:src="${this.journals[i].image}" v-bind:key="${this.journals[i].id}" alt="" style="width: 50%"/>
-        </div>
+          `<img id="popup-image" src="${this.journals[i].image}"/>
         <p><strong>${this.journals[i].date}<br>
         ${this.journals[i].title}</strong><br>
         ${this.journals[i].body}<br>
