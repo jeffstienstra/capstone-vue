@@ -3,25 +3,30 @@
     <h1>Favorites</h1>
     <p>________________________________________</p>
     <div v-for="favorite in myFavorites" v-bind:key="favorite.id">
-      <h3>{{ favorite.park_name }}</h3>
+      <h3 style="color: #006400" v-if="favorite.visited">{{ favorite.park_name }}</h3>
+      <h3 v-if="favorite.visited != true">{{ favorite.park_name }}</h3>
       <img v-bind:src="favorite.image_url" v-bind:key="favorite.id" alt="" style="width: 25%" />
       <div>
         <button v-on:click="destroyFavorite(favorite)">Remove</button>
         <button v-on:click="favoriteShow(favorite)">Park Details</button>
         <button v-on:click="showJournals(favorite)">Field Notes</button>
         <button v-on:click="showCreateJournalModal(favorite)">Add Field Note</button>
-        <button v-on:click="showFieldNotesMap(favorite)">Map</button>
+        <button v-if="favorite.journals.length > 0" v-on:click="showFieldNotesMap(favorite)">Field Note Map</button>
+        <!-- <p style="color: green" v-if="favorite.visited">
+          <strong>You've visited {{ favorite.park_name }}.</strong>
+        </p> -->
         <p>________________________________________</p>
       </div>
     </div>
 
-    <!-- favorites modal -->
+    <!-- show favorite park details modal -->
     <dialog id="park-details" style="width: 60%">
       <form method="dialog">
         <button float:right>Close</button>
         <!-- <button type="button" class="close" data-dismiss="modal">Close</button> -->
         <h1>{{ favorite.fullName }}</h1>
 
+        <!-- create the map menu -->
         <div id="menu">
           <input
             id="jeffstienstra/ckqxyevbn0mff17qgpmz4ned8"
@@ -33,43 +38,51 @@
           <label for="jeffstienstra/ckqxyevbn0mff17qgpmz4ned8">satellite</label>
           <input id="jeffstienstra/ckqx6hkw40yp618mvdg4hbjoc" type="radio" name="rtoggle" value="terrain" />
           <label for="jeffstienstra/ckqx6hkw40yp618mvdg4hbjoc">terrain</label>
-          <!-- <input id="jeffstienstra/ckqxyj14u1rsh17nvihai24i8" type="radio" name="rtoggle" value="dark" />
-          <label for="jeffstienstra/ckqxyj14u1rsh17nvihai24i8">dark</label> -->
         </div>
+
+        <!-- render the map window -->
         <div id="map"></div>
 
-        <p>\/ this should be an image carousel \/</p>
+        <!-- display details of the selected favorite park -->
+        <div>
+          <p>\/ this should be an image carousel \/</p>
 
-        <div v-for="currentImage in currentImages" v-bind:key="currentImage.id">
-          <img v-bind:src="currentImage" v-bind:key="currentImage.id" alt="" style="width: 50%" />
+          <div v-for="currentImage in currentImages" v-bind:key="currentImage.id">
+            <img v-bind:src="currentImage" v-bind:key="currentImage.id" alt="" style="width: 50%" />
+          </div>
+
+          <h3>About</h3>
+          <p>{{ favorite.description }}</p>
+
+          <h3>Activities</h3>
+          <p>{{ currentActivities }}</p>
+
+          <h3>Weather</h3>
+          <p>{{ favorite.weatherInfo }}</p>
+
+          <h3>Directions</h3>
+          <p>{{ favorite.directionsInfo }}</p>
+
+          <h3>Entrance Fees</h3>
+          <p>{{ entranceFee }}</p>
         </div>
-
-        <h3>About</h3>
-        <p>{{ favorite.description }}</p>
-
-        <h3>Activities</h3>
-        <p>{{ currentActivities }}</p>
-
-        <h3>Weather</h3>
-        <p>{{ favorite.weatherInfo }}</p>
-
-        <h3>Directions</h3>
-        <p>{{ favorite.directionsInfo }}</p>
-
-        <h3>Entrance Fees</h3>
-        <p>{{ entranceFee }}</p>
       </form>
     </dialog>
 
-    <!-- show all journals of favorite park modal -->
+    <!-- display all journals of favorite park modal -->
     <dialog id="journals" style="width: 60%">
       <form method="dialog">
+        <h2 v-if="this.journals.length == 0">
+          Uh oh, you don't have any Field Notes for {{ this.favorite.park_name }}. Guess its time to travel!
+        </h2>
+
         <div>
-          <!-- <input v-on:click="addJournal(favorite)" type="button" value="Add Field Note" /> -->
           <button>Close</button>
         </div>
-
+        <br />
         <div v-for="journal in journals" v-bind:key="journal.id">
+          <img v-bind:src="journal.image" v-bind:key="journal.id" alt="" style="width: 50%" />
+
           <p>{{ journal.date }}</p>
 
           <h1>{{ journal.title }}</h1>
@@ -79,6 +92,46 @@
           <button v-on:click="editJournal(journal)">Edit</button>
           <p>________________________________________</p>
         </div>
+      </form>
+    </dialog>
+
+    <!-- journalCreate modal: add field note to a favorite park -->
+    <dialog id="journal-create" style="width: 100%">
+      <button v-on:click="hideCreateJournalModal()">Cancel</button>
+      <form v-on:submit.prevent="createJournal(favorite)">
+        <h1>New Field Note</h1>
+        <p>
+          Note: {{ favorite.park_name }}'s coordinates are
+          <br />
+          Latitude {{ favorite.latitude }} Longitude {{ favorite.longitude }}
+        </p>
+        <button v-on:click="confirmUserGeolocation()" type="button">Add GPS Data</button>
+        <p v-if="gpsConfirmation" style="color: green"><strong>GPS data added to Field Note</strong></p>
+        <div>
+          <label>Latitude:</label>
+          <input type="text" v-model="latitude" />
+        </div>
+        <div>
+          <label>Longitude:</label>
+          <input type="text" v-model="longitude" />
+        </div>
+        <div>
+          <label>Date:</label>
+          <input type="text" v-model="date" />
+        </div>
+        <div>
+          <label>Title:</label>
+          <input type="text" v-model="title" />
+        </div>
+        <div>
+          <label>Body:</label>
+          <input type="text" v-model="body" />
+        </div>
+        <div>
+          Image:
+          <input type="file" v-on:change="setFile($event)" ref="fileInput" />
+        </div>
+        <input type="submit" value="Submit" />
       </form>
     </dialog>
 
@@ -104,28 +157,24 @@
       </form>
     </dialog>
 
-    <!-- create a journal to favorite park -->
-    <dialog id="journal-create" style="width: 60%">
-      <form v-on:submit.prevent="createJournal(favorite)">
-        <button>Cancel</button>
+    <!-- show Field Notes map -->
+    <dialog id="field-notes-map" style="width: 60%">
+      <!-- create the map menu -->
+      <div id="field-menu">
+        <input
+          id="jeffstienstra/ckqxyevbn0mff17qgpmz4ned8"
+          type="radio"
+          name="rtoggle"
+          value="satellite"
+          checked="checked"
+        />
+        <label for="jeffstienstra/ckqxyevbn0mff17qgpmz4ned8">satellite</label>
+        <input id="jeffstienstra/ckqx6hkw40yp618mvdg4hbjoc" type="radio" name="rtoggle" value="terrain" />
+        <label for="jeffstienstra/ckqx6hkw40yp618mvdg4hbjoc">terrain</label>
+      </div>
 
-        <h1>New Field Note</h1>
-        <button v-on:click="confirmUserGeolocation()" type="button">Add Geolocation to Field Note</button>
-
-        <div>
-          <label>Date:</label>
-          <input type="text" v-model="createJournalParams.date" />
-        </div>
-        <div>
-          <label>Title:</label>
-          <input type="text" v-model="createJournalParams.title" />
-        </div>
-        <div>
-          <label>Body:</label>
-          <input type="text" v-model="createJournalParams.body" />
-        </div>
-        <input type="submit" value="Submit" />
-      </form>
+      <!-- render the map window -->
+      <div id="field-map"></div>
     </dialog>
   </div>
 </template>
@@ -134,6 +183,14 @@
 body {
   margin: 0;
   padding: 0;
+}
+
+#field-map {
+  position: relative;
+  height: 450px;
+  top: 0;
+  bottom: 0;
+  width: 100%;
 }
 
 #map {
@@ -170,12 +227,26 @@ export default {
       entranceFee: {},
       updateJournalParams: {},
       createJournalParams: {},
+      parkCode: "",
+      date: "",
+      title: "",
+      body: "",
+      imageFile: "",
+      latitude: "",
+      longitude: "",
+      gpsConfirmation: false,
     };
   },
   created: function () {
     this.favoritesIndex();
   },
   methods: {
+    setFile: function (event) {
+      if (event.target.files.length > 0) {
+        this.imageFile = event.target.files[0];
+        console.log(this.createJournalParams.image);
+      }
+    },
     favoritesIndex: function () {
       axios.get("/favorites").then((response) => {
         console.log("Favorites ->", response);
@@ -223,8 +294,8 @@ export default {
           center: [this.favorite.longitude, this.favorite.latitude], // starting position [lng, lat]
           zoom: 15, // starting zoom
         });
-        var layerList = document.getElementById("menu");
-        var inputs = layerList.getElementsByTagName("input");
+        var layerList = document.getElementById("field-menu");
+        var inputs = layerList.getElementsByTagName("field-input");
 
         //    \/ set up map styles toggle \/
         function switchLayer(layer) {
@@ -262,22 +333,52 @@ export default {
       });
     },
     showJournals: function (favorite) {
-      console.log("all journals of this favorite", favorite["journals"]);
+      this.favorite = favorite;
+      console.log("all journals of this favorite", favorite);
       this.journals = favorite["journals"];
-      // axios.get(`journals/${journal.favorite_id}`).then((response) => {
-      //   console.log("This journal ->", response);
-      //   this.journal = response.data;
-      //   console.log(this.journal);
       document.querySelector("#journals").showModal();
-      // });
     },
+
+    createJournal: function (favorite) {
+      this.favorite = favorite;
+      console.log(favorite);
+
+      console.log("create journal ->", favorite);
+
+      var formData = new FormData();
+      formData.append("favorite_id", this.favorite.id);
+      formData.append("parkCode", this.favorite.parkCode);
+      formData.append("date", this.date);
+      formData.append("title", this.title);
+      formData.append("body", this.body);
+      formData.append("latitude", this.latitude);
+      formData.append("longitude", this.longitude);
+      formData.append("image_file", this.imageFile);
+      console.log("image ->", this.imageFile);
+
+      axios
+        .post(`/journals`, formData)
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((error) => {
+          console.log("ERRRR:: ", error.response.data);
+          this.latitude = "";
+          this.longitude = "";
+          this.date = "";
+          this.title = "";
+          this.body = "";
+          this.$refs.fileInput.value = "";
+        });
+      // window.location.reload();
+    },
+
     editJournal: function (journal) {
       console.log("this journal ->", journal);
       this.updateJournalParams = journal;
-
       document.querySelector("#journal-update").showModal();
-      // });
     },
+
     destroyJournal: function (journal) {
       console.log("destroy journal", journal);
       axios.delete(`/journals/${journal.id}`).then((response) => {
@@ -285,26 +386,18 @@ export default {
         window.location.reload();
       });
     },
+
     showCreateJournalModal: function (favorite) {
       this.favorite = favorite;
       document.querySelector("#journal-create").showModal();
     },
-    createJournal: function (favorite) {
-      this.favorite = favorite;
-      console.log(favorite);
-      this.createJournalParams.favorite_id = favorite.id;
-      console.log("create journal ->", favorite, this.createJournalParams);
-      axios
-        .post(`/journals`, this.createJournalParams)
-        .then((response) => {
-          console.log(response.data);
-        })
-        .catch((error) => {
-          this.errors = error.response.data.errors;
-          console.log(this.errors);
-        });
+
+    hideCreateJournalModal: function () {
+      console.log("close the modal");
       window.location.reload();
+      // document.querySelector("#journal-create").hideModal();   <--such a thing as hideModal()????
     },
+
     updateJournal: function (updateJournalParams) {
       console.log("edit journal", updateJournalParams);
       axios.patch(`journals/${updateJournalParams.id}`, updateJournalParams).then((response) => {
@@ -323,6 +416,7 @@ export default {
           const { latitude, longitude } = position.coords;
           this.latitude = latitude;
           this.longitude = longitude;
+          this.gpsConfirmation = true;
           console.log(`Your coordinates: ${this.latitude} lat and ${this.longitude} lng`);
         };
 
@@ -339,7 +433,58 @@ export default {
     },
 
     showFieldNotesMap: function (favorite) {
-      console.log("show field notes map", favorite);
+      document.querySelector("#field-notes-map").showModal();
+      this.journals = favorite["journals"];
+
+      //    \/render map \/
+      mapboxgl.accessToken = process.env.VUE_APP_MAPBOX_API_KEY;
+      var map = new mapboxgl.Map({
+        container: "field-map", // container ID
+        style: "mapbox://styles/jeffstienstra/ckqxyevbn0mff17qgpmz4ned8", // style URL
+        center: [this.journals[0].longitude, this.journals[0].latitude], // starting position [lng, lat]
+        zoom: 12, // starting zoom
+      });
+      console.log(map);
+      console.log("this.journal ->", this.journals);
+      console.log("lat: ", this.journals[0].latitude, " long: ", this.journals[0].longitude);
+
+      var layerList = document.getElementById("field-menu");
+      var inputs = layerList.getElementsByTagName("input");
+
+      //    \/ set up map styles toggle \/
+      function switchLayer(layer) {
+        var layerId = layer.target.id;
+        map.setStyle("mapbox://styles/" + `${layerId}`);
+      }
+      var i = 0;
+      for (i = 0; i < inputs.length; i++) {
+        inputs[i].onclick = switchLayer;
+      }
+
+      // create popups for each journal \/ ! BUT IMAGES WILL NOT APPEAR ! \/
+      i = 0;
+      for (i = 0; i < this.journals.length; i++) {
+        var popup = new mapboxgl.Popup({ offset: 0 }).setHTML(
+          `<div>
+        <img v-bind:src="${this.journals[i].image}" v-bind:key="${this.journals[i].id}" alt="" style="width: 50%"/>
+        </div>
+        <p><strong>${this.journals[i].date}<br>
+        ${this.journals[i].title}</strong><br>
+        ${this.journals[i].body}<br>
+        </p>`
+        );
+
+        // create DOM element for the marker
+        var el = document.createElement("div");
+        el.id = "field_marker";
+
+        var field_marker = new mapboxgl.Marker()
+
+          .setLngLat([this.journals[i].longitude, this.journals[i].latitude])
+          .setPopup(popup)
+          .addTo(map);
+        console.log(field_marker, map);
+      }
     },
   },
 };

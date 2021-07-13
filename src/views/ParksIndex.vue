@@ -1,21 +1,51 @@
 <template>
   <div>
     <div>
-      <h1>Explore the National Parks to spot some plants!</h1>
+      <h1>Explore the National Parks</h1>
     </div>
+
+    <!-- format this drop down for initial park search -->
+    <form action="/">
+      <label for="stateCode">Search by State:</label>
+      <select id="stateCode" name="stateCode">
+        <option value="" selected>all</option>
+        <option value="al">ALABAMA</option>
+        <option value="ak">ALASKA</option>
+        <option value="az">ARIZONA</option>
+        <option value="ar">ARKANSAS</option>
+        <option value="ca">CALIFORNIA</option>
+        <option value="co">COLORADO</option>
+        <option value="ct">CONNECTICUT</option>
+        <option value="de">DELAWARE</option>
+      </select>
+      <br />
+      <label for="activities">Search by activity:</label>
+      <select id="activities" name="activities">
+        <option value="" selected>all</option>
+        <option value="camping">Camping</option>
+        <option value="fishing">Fishing</option>
+        <option value="hiking">Hiking</option>
+        <option value="swimming">Swimming</option>
+      </select>
+      <br />
+      <!-- <input v-on:click="parksIndex()" type="submit" /> -->
+    </form>
+    <button v-on:click="parksIndex()">Submit</button>
 
     <div v-for="park in parks" v-bind:key="park.id">
       <h3>{{ park.fullName }}</h3>
       <img v-bind:src="park.images[0].url" v-bind:key="park.id" alt="" style="width: 25%" />
       <div>
         <button v-on:click="parksShow(park)">details</button>
+        <input v-on:click="addFavorite(park)" type="button" value="+Favorites" />
       </div>
+      <p>________________________________________</p>
     </div>
 
     <dialog id="park-details" style="width: 65%">
       <form method="dialog">
-        <input v-on:click="addFavorite(currentPark)" type="button" value="+Favorites" style="float: right" />
         <button float:right>Close</button>
+        <input v-on:click="addFavorite(currentPark)" type="button" value="+Favorites" />
         <!-- <button type="button" class="close" data-dismiss="modal">Close</button> -->
 
         <h1>{{ currentPark.fullName }}</h1>
@@ -60,7 +90,7 @@
       </form>
     </dialog>
     <!-- \/ how to get the next 10 parks? \/ -->
-    <button v-on:click="moreParks()">more... ></button>
+    <!-- <button v-on:click="moreParks()">more... ></button> -->
     <!-- <a v-bind:href="`/parks/`">next</a> -->
   </div>
 </template>
@@ -104,21 +134,22 @@ export default {
       entranceFee: {},
     };
   },
-  created: function () {
-    this.parksIndex();
-  },
+  created: function () {},
 
   methods: {
+    // searchByState: function () {
+    //   console.log("search by state ->", this.searchParams);
+    // },
     parksIndex: function () {
       axios.get("/parks").then((response) => {
         console.log("Parks ->", response);
         this.parks = response.data;
       });
     },
-    moreParks: function () {
-      console.log("show the next set of parks...");
-      // add 10 to the 'limit' param in the NPS search URL
-    },
+    // moreParks: function () {
+    //   console.log("show the next set of parks...");
+    //   // add 10 to the 'limit' param in the NPS search URL
+    // },
     parksShow: function (park) {
       console.log("Current Park", park);
       console.log("Current Park's Activities", park.activities);
@@ -201,11 +232,19 @@ export default {
           park["addresses"][0]["postalCode"],
         parkCode: park.parkCode,
         image_url: park.images[0]["url"],
+        longitude: park.longitude,
+        latitude: park.latitude,
+        visited: false,
       };
-      axios.post("/favorites", params).then((response) => {
-        console.log("added to favorites", response);
-        this.favorites = response.data.data;
-      });
+      axios
+        .post("/favorites", params)
+        .then((response) => {
+          this.favorites = response.data.data;
+          console.log("added to favorites", response);
+        })
+        .catch((error) => {
+          console.log("ERRRR:: ", error.response.data);
+        });
     },
   },
 };

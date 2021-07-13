@@ -1,11 +1,16 @@
 <template>
   <div class="plants">
-    <button v-on:click="confirmUserGeolocation()" type="button">Find my location</button>
+    <button v-on:click="confirmUserGeolocation()" type="button">Add GPS Data</button>
     <form>
       <input type="file" accept="image/*" />
       <button v-on:click="getPlantId()" type="button">OK</button>
     </form>
     <h3>This is where you'll see a list of plants you've collected.</h3>
+    <!-- plant.id results modal -->
+    <dialog id="plant-results" style="width: 75%">
+      <h1>hello</h1>
+      <button>close</button>
+    </dialog>
   </div>
 </template>
 
@@ -107,7 +112,7 @@ export default {
       }
     },
 
-    //    \/Plant.id scripts \/
+    //    \/ Plant.id scripts \/
     getPlantId: function () {
       const files = [...document.querySelector("input[type=file]").files];
       const promises = files.map((file) => {
