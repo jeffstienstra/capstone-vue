@@ -1,5 +1,7 @@
 <template>
   <div class="login">
+    <span v-title data-title="traVlog"></span>
+
     <form v-on:submit.prevent="submit()">
       <h1>Login</h1>
       <ul>

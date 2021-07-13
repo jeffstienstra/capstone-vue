@@ -1,5 +1,7 @@
 <template>
-  <div class="logout"></div>
+  <div class="logout">
+    <span v-title data-title="traVlog"></span>
+  </div>
 </template>
 
 <script>

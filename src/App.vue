@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <span v-title data-title="traVlog"></span>
     <div id="nav">
       <router-link style="padding: 0px 10px" to="/">Home</router-link>
 

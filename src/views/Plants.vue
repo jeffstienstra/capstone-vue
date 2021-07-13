@@ -1,5 +1,6 @@
 <template>
   <div class="plants">
+    <span v-title data-title="traVlog"></span>
     <button v-on:click="confirmUserGeolocation()" type="button">Add GPS Data</button>
     <form>
       <input type="file" accept="image/*" />

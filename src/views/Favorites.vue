@@ -1,5 +1,7 @@
 <template>
   <div>
+    <span v-title data-title="traVlog"></span>
+
     <h1>Favorites</h1>
     <p>________________________________________</p>
     <div v-for="favorite in myFavorites" v-bind:key="favorite.id">
@@ -180,6 +182,14 @@
 </template>
 
 <style>
+.marker {
+  background-image: url("https://res.cloudinary.com/nacho-files/image/upload/v1626147221/travlog_marker_white_kmufmr.png");
+  background-size: cover;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  cursor: pointer;
+}
 body {
   margin: 0;
   padding: 0;
@@ -314,9 +324,9 @@ export default {
 
         // create DOM element for the marker
         var el = document.createElement("div");
-        el.id = "marker";
+        el.className = "marker";
 
-        var marker1 = new mapboxgl.Marker()
+        var marker1 = new mapboxgl.Marker(el)
           .setLngLat([this.favorite.longitude, this.favorite.latitude])
           .setPopup(popup)
           .addTo(map);
@@ -476,9 +486,9 @@ export default {
 
         // create DOM element for the marker
         var el = document.createElement("div");
-        el.id = "field_marker";
+        el.className = "marker";
 
-        var field_marker = new mapboxgl.Marker()
+        var field_marker = new mapboxgl.Marker(el)
 
           .setLngLat([this.journals[i].longitude, this.journals[i].latitude])
           .setPopup(popup)

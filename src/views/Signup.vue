@@ -1,5 +1,6 @@
 <template>
   <div class="signup">
+    <span v-title data-title="traVlog"></span>
     <form v-on:submit.prevent="submit()">
       <h1>Signup</h1>
       <ul>

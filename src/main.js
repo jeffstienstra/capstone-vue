@@ -10,6 +10,12 @@ if (jwt) {
   axios.defaults.headers.common["Authorization"] = "Bearer " + jwt;
 }
 
+Vue.directive("title", {
+  inserted: function (el) {
+    document.title = el.dataset.title;
+  },
+});
+
 Vue.config.productionTip = false;
 
 new Vue({

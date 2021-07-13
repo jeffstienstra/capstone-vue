@@ -1,5 +1,6 @@
 <template>
   <div>
+    <span v-title data-title="traVlog"></span>
     <div>
       <h1>Explore the National Parks</h1>
     </div>
@@ -96,6 +97,15 @@
 </template>
 
 <style>
+.marker {
+  background-image: url("https://res.cloudinary.com/nacho-files/image/upload/v1626145582/travlog_icon_white_bg_pgw7lv.png");
+  background-size: cover;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
 body {
   margin: 0;
   padding: 0;
@@ -210,9 +220,9 @@ export default {
 
       // create DOM element for the marker
       var el = document.createElement("div");
-      el.id = "marker";
+      el.className = "marker";
 
-      var marker1 = new mapboxgl.Marker()
+      var marker1 = new mapboxgl.Marker(el)
         .setLngLat([this.currentPark.longitude, this.currentPark.latitude])
         .setPopup(popup)
         .addTo(map);

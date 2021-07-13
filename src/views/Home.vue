@@ -1,5 +1,8 @@
 <template>
   <div class="">
+    <span v-title data-title="traVlog"></span>
+
+    <img src="/src/assets/travlog_logo" alt="" />
     <p id="headline">TraVlog</p>
     <h1>Discover the outdoors. Share your story.</h1>
     <h4 style="padding: 0px 100px, align: center"></h4>
