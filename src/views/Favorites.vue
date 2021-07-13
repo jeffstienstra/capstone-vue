@@ -186,7 +186,7 @@
   height: 100px;
 }
 .marker {
-  background-image: url("https://res.cloudinary.com/nacho-files/image/upload/v1626147221/travlog_marker_white_kmufmr.png");
+  background-image: url("https://res.cloudinary.com/nacho-files/image/upload/v1626207290/travlog%20logos/travlog_marker_wht_xxsm_1_vzs3fc.png");
   background-size: cover;
   width: 50px;
   height: 50px;

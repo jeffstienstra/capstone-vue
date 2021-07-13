@@ -6,7 +6,7 @@
       <div class="nav-wrapper">
         <div id="nav-logo-div">
           <a href="/home" class="brand-logo left" style="align">
-            <img id="nav-logo" src="./assets/travlog_logo_sm.png" />
+            <img id="nav-logo" src="./assets/travlog_logo_wht_xsm.png" />
           </a>
         </div>
         <ul class="right hide-on-med-and-down">
@@ -21,28 +21,29 @@
       </div>
     </nav>
 
-    <!-- <div id="nav">
-      <router-link style="padding: 0px 10px" to="/">Home</router-link>
-
-      <router-link style="padding: 0px 10px" to="/parks">Parks</router-link>
-
-      <router-link style="padding: 0px 10px" v-if="isLoggedIn()" to="/favorites">Favorites</router-link>
-
-      <router-link style="padding: 0px 10px" v-if="isLoggedIn()" to="/plants">Plants</router-link>
-
-      <router-link style="padding: 0px 10px" v-if="!isLoggedIn()" to="/login">Login</router-link>
-
-      <router-link style="padding: 0px 10px" v-if="isLoggedIn()" to="/logout">Logout</router-link>
-
-      <router-link style="padding: 0px 10px" v-if="!isLoggedIn()" to="/signup">Signup</router-link>
-    </div> -->
     <router-view />
   </div>
 </template>
 
+<script>
+export default {
+  data: function () {
+    return {
+      flashMessage: null,
+    };
+  },
+
+  methods: {
+    isLoggedIn: function () {
+      return localStorage.getItem("jwt");
+    },
+  },
+};
+</script>
+
 <style>
 .nav-wrapper {
-  background-color: rgb(108, 201, 105);
+  background-color: rgb(20, 90, 18);
 }
 #nav-logo {
   position: relative;
@@ -70,19 +71,3 @@
   color: #42b983;
 }
 </style>
-
-<script>
-export default {
-  data: function () {
-    return {
-      flashMessage: null,
-    };
-  },
-
-  methods: {
-    isLoggedIn: function () {
-      return localStorage.getItem("jwt");
-    },
-  },
-};
-</script>

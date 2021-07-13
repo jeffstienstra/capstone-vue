@@ -2,7 +2,7 @@
   <div>
     <span v-title data-title="traVlog"></span>
     <div>
-      <h1>Explore the National Parks</h1>
+      <h2>Explore the National Parks</h2>
     </div>
 
     <!-- format this drop down for initial park search -->
@@ -67,20 +67,6 @@
         </div>
         <div id="map"></div>
 
-        <div class="container">
-          <h3>Materialize Carousel Demo</h3>
-
-          <div class="carousel carousel-slider" id="demo-carousel-indicators" data-indicators="true">
-            <a class="carousel-item" href="#one!"><img v-bind:src="currentImages[0].url" /></a>
-
-            <a class="carousel-item" href="#two!"><img v-bind:src="currentImages[1].url" /></a>
-
-            <a class="carousel-item" href="#three!"><img v-bind:src="currentImages[2].url" /></a>
-
-            <a class="carousel-item" href="#four!"><img v-bind:src="currentImages[4].url" /></a>
-          </div>
-        </div>
-
         <div v-for="currentImage in currentImages" v-bind:key="currentImage.id">
           <img v-bind:src="currentImage" v-bind:key="currentImage.id" alt="" style="width: 50%" />
         </div>
@@ -111,7 +97,7 @@
 
 <style>
 .marker {
-  background-image: url("https://res.cloudinary.com/nacho-files/image/upload/v1626145582/travlog_icon_white_bg_pgw7lv.png");
+  background-image: url("https://res.cloudinary.com/nacho-files/image/upload/v1626207290/travlog%20logos/travlog_marker_wht_xxsm_1_vzs3fc.png");
   background-size: cover;
   width: 50px;
   height: 50px;
@@ -156,11 +142,6 @@ export default {
       image_url: "",
       entranceFee: {},
     };
-  },
-  mounted() {
-    document.ready(function () {
-      "#demo-carousel-indicators".carousel({ fullWidth: true });
-    });
   },
 
   created: function () {},
