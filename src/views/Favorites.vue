@@ -291,7 +291,7 @@ body {
 
 #map {
   position: relative;
-  height: 300px;
+  height: 50vh;
   top: 0;
   bottom: 0;
   width: 100%;

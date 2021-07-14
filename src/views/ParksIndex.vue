@@ -221,7 +221,7 @@ body {
 }
 
 #map {
-  height: 100%;
+  height: 50vh%;
   top: 0;
   bottom: 0;
   width: 100vw;
