@@ -1,39 +1,75 @@
 <template>
   <div>
     <span v-title data-title="traVlog"></span>
-    <div>
-      <h2>Explore the National Parks</h2>
+    <p></p>
+    <h2>Explore the National Parks</h2>
+
+    <div class="container h-100">
+      <div class="row h-100 justify-content-center align-items-center">
+        <div class="col-10 col-md-8 col-lg-6">
+          <!-- Form -->
+          <form class="form-example" action="" method="">
+            <!-- Input fields -->
+            <select
+              id="stateCode"
+              name="stateCode"
+              class="form-select form-select-lg mb-3"
+              aria-label=".form-select-lg example"
+            >
+              <option selected>Select State</option>
+              <option value="al">ALABAMA</option>
+              <option value="ak">ALASKA</option>
+              <option value="az">ARIZONA</option>
+              <option value="ar">ARKANSAS</option>
+              <option value="ca">CALIFORNIA</option>
+              <option value="co">COLORADO</option>
+              <option value="ct">CONNECTICUT</option>
+              <option value="de">DELAWARE</option>
+            </select>
+
+            <select
+              id="activities"
+              name="activities"
+              class="form-select form-select-lg mb-3"
+              aria-label=".form-select-lg example"
+            >
+              <option value="" selected>Select Activity</option>
+              <option value="camping">Camping</option>
+              <option value="fishing">Fishing</option>
+              <option value="hiking">Hiking</option>
+              <option value="swimming">Swimming</option>
+            </select>
+            <!-- End input fields -->
+          </form>
+          <!-- Form end -->
+        </div>
+      </div>
     </div>
 
-    <!-- format this drop down for initial park search -->
-    <form action="/">
-      <label for="stateCode">Search by State:</label>
-      <select id="stateCode" name="stateCode">
-        <option value="" selected>all</option>
-        <option value="al">ALABAMA</option>
-        <option value="ak">ALASKA</option>
-        <option value="az">ARIZONA</option>
-        <option value="ar">ARKANSAS</option>
-        <option value="ca">CALIFORNIA</option>
-        <option value="co">COLORADO</option>
-        <option value="ct">CONNECTICUT</option>
-        <option value="de">DELAWARE</option>
-      </select>
-      <br />
-      <label for="activities">Search by activity:</label>
-      <select id="activities" name="activities">
-        <option value="" selected>all</option>
-        <option value="camping">Camping</option>
-        <option value="fishing">Fishing</option>
-        <option value="hiking">Hiking</option>
-        <option value="swimming">Swimming</option>
-      </select>
-      <br />
-      <!-- <input v-on:click="parksIndex()" type="submit" /> -->
-    </form>
-    <button v-on:click="parksIndex()">Submit</button>
+    <button v-on:click="parksIndex()" class="btn btn-primary btn-customized">Search</button>
 
-    <div v-for="park in parks" v-bind:key="park.id">
+    <p></p>
+    <div class="container">
+      <div class="row row-cols-3">
+        <div v-for="park in parks" v-bind:key="park.id" class="col">
+          <div class="card">
+            <img
+              style="max-height: 250px; max-width: 450px; object-fit: contain"
+              v-bind:src="park.images[0].url"
+              v-bind:key="park.id"
+              class="card-img-top"
+              alt=""
+            />
+            <div class="card-body">
+              <h5 class="card-title">{{ park.fullName }}</h5>
+              <a v-on:click="parksShow(park)" href="#" class="btn btn-primary">Details</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- <div v-for="park in parks" v-bind:key="park.id">
       <h3>{{ park.fullName }}</h3>
       <img v-bind:src="park.images[0].url" v-bind:key="park.id" alt="" style="width: 25%" />
       <div>
@@ -41,7 +77,7 @@
         <input v-on:click="addFavorite(park)" type="button" value="+Favorites" />
       </div>
       <p>________________________________________</p>
-    </div>
+    </div> -->
 
     <dialog id="park-details" style="width: 65%">
       <form method="dialog">

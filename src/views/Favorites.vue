@@ -1,6 +1,57 @@
 <template>
   <div>
     <span v-title data-title="traVlog"></span>
+    <p></p>
+    <h2>Favorites</h2>
+
+    <!-- \/  cards  \/ -->
+    <div class="container">
+      <div class="row row-cols-3">
+        <div v-for="favorite in myFavorites" v-bind:key="favorite.id" class="col">
+          <div class="card">
+            <div class="img-container">
+              <div v-if="favorite.visited" class="tag">Visited!</div>
+              <img
+                style="max-height: 100%; max-width: 100%; object-fit: contain"
+                v-bind:src="favorite.image_url"
+                v-bind:key="favorite.id"
+                class="card-img-top"
+                alt=""
+              />
+            </div>
+            <div class="card-body">
+              <h5 class="card-title">{{ favorite.park_name }}</h5>
+
+              <!-- \/  action buttons on card  \/ -->
+              <div class="btn-group-sm" role="group" aria-label="Basic example">
+                <button v-on:click="destroyFavorite(favorite)" type="button" class="btn btn-outline-danger">X</button>
+                <button v-on:click="favoriteShow(favorite)" type="button" class="btn btn-outline-primary">
+                  Park Info
+                </button>
+                <button v-on:click="showJournals(favorite)" type="button" class="btn btn-outline-primary">
+                  Journals
+                </button>
+                <button v-on:click="showCreateJournalModal(favorite)" type="button" class="btn btn-outline-primary">
+                  +Journal
+                </button>
+                <button
+                  v-if="favorite.journals.length > 0"
+                  v-on:click="showFieldNotesMap(favorite)"
+                  type="button"
+                  class="btn btn-outline-success"
+                >
+                  Travlog
+                </button>
+              </div>
+              <!-- <a v-on:click="destroyFavorite(favorite)" href="#" class="btn btn-outline-danger">Remove</a>
+              <a v-on:click="favoriteShow(favorite)" href="#" class="btn btn-outline-dark">Details</a>
+              <a v-on:click="showJournals(favorite)" href="#" class="btn btn-outline-dark">Journals</a>
+              <a v-on:click="showCreateJournalModal(favorite)" href="#" class="btn btn-outline-dark">+Journal</a> -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <p>________________________________________</p>
     <div v-for="favorite in myFavorites" v-bind:key="favorite.id">
@@ -107,7 +158,12 @@
           Latitude {{ favorite.latitude }} Longitude {{ favorite.longitude }}
         </p>
         <button v-on:click="confirmUserGeolocation()" type="button">Add GPS Data</button>
-        <p v-if="gpsConfirmation" style="color: green"><strong>GPS data added to Field Note</strong></p>
+
+        <v-alert v-if="gpsConfirmation" border="right" dismissible elevation="11" type="success">
+          GPS data added to Field Note
+        </v-alert>
+        <!-- <p v-if="gpsConfirmation" style="color: green"><strong>GPS data added to Field Note</strong></p> -->
+
         <div>
           <label>Latitude:</label>
           <input type="text" v-model="latitude" />
@@ -181,6 +237,22 @@
 </template>
 
 <style>
+.img-container {
+  border: 1px solid #dddddd;
+
+  position: relative;
+}
+.tag {
+  float: left;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  z-index: 1000;
+  background-color: #05af0d;
+  padding: 5px;
+  color: #ffffff;
+  font-weight: bold;
+}
 #popup-image {
   max-width: 75%;
   height: 100px;
@@ -383,7 +455,7 @@ export default {
           this.body = "";
           this.$refs.fileInput.value = "";
         });
-      // window.location.reload();
+      window.location.reload();
     },
 
     editJournal: function (journal) {

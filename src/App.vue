@@ -1,18 +1,47 @@
 <template>
   <div id="app">
     <!-- <span v-title data-title="traVlog"></span> -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="/home"><img src="travlog_logo_35px.png" alt="" /></a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link" href="/parks"><strong>Find Parks</strong></a>
+            </li>
+            <li class="nav-item">
+              <a v-if="isLoggedIn()" class="nav-link" href="/favorites"><strong>Favorites</strong></a>
+            </li>
+            <li class="nav-item">
+              <a v-if="isLoggedIn()" class="nav-link" href="/plants"><strong>Plants</strong></a>
+            </li>
+            <li class="nav-item">
+              <a v-if="!isLoggedIn()" class="nav-link" href="/login"><strong>Login</strong></a>
+            </li>
+            <li class="nav-item">
+              <a v-if="isLoggedIn()" class="nav-link" href="/logout"><strong>Logout</strong></a>
+            </li>
+            <li class="nav-item">
+              <a v-if="!isLoggedIn()" class="nav-link" href="/signup"><strong>Signup</strong></a>
+            </li>
+          </ul>
 
-    <nav>
-      <div>
-        <ul>
-          <li><a href="/home">Home</a></li>
-          <li v-if="isLoggedIn()"><a href="/parks">Find Parks</a></li>
-          <li v-if="isLoggedIn()"><a href="/favorites">Favorites</a></li>
-          <li v-if="isLoggedIn()"><a href="/plants">Plants</a></li>
-          <li v-if="!isLoggedIn()"><a href="/login">Login</a></li>
-          <li v-if="isLoggedIn()"><a href="/logout">Logout</a></li>
-          <li v-if="!isLoggedIn()"><a href="/signup">Signup</a></li>
-        </ul>
+          <form class="d-flex">
+            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
+            <button class="btn btn-outline-success" type="submit">Search</button>
+          </form>
+        </div>
       </div>
     </nav>
 
