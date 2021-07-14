@@ -1,0 +1,98 @@
+  <!-- OLD show Field Notes map -->
+  <dialog id="field-notes-map" style="width: 60%">
+    <!-- create the map menu -->
+    <div id="field-menu">
+      <input
+        id="jeffstienstra/ckqxyevbn0mff17qgpmz4ned8"
+        type="radio"
+        name="rtoggle"
+        value="satellite"
+        checked="checked"
+      />
+      <label for="jeffstienstra/ckqxyevbn0mff17qgpmz4ned8">satellite</label>
+      <input id="jeffstienstra/ckqx6hkw40yp618mvdg4hbjoc" type="radio" name="rtoggle" value="terrain" />
+      <label for="jeffstienstra/ckqx6hkw40yp618mvdg4hbjoc">terrain</label>
+    </div>
+
+    <!-- render the map window -->
+    <div id="field-map"></div>
+  </dialog>
+
+
+
+<!-- OLD show park details modal -->
+<dialog id="park-details" style="width: 65%">
+  <form method="dialog">
+    <button float:right>Close</button>
+    <input v-if="isLoggedIn()" v-on:click="addFavorite(currentPark)" type="button" value="+Favorites" />
+    <!-- <button type="button" class="close" data-dismiss="modal">Close</button> -->
+
+    <h1>{{ currentPark.fullName }}</h1>
+
+    <!-- \/ render Mapbox map  \/ -->
+    <div id="menu">
+      <input
+        id="jeffstienstra/ckqxyevbn0mff17qgpmz4ned8"
+        type="radio"
+        name="rtoggle"
+        value="satellite"
+        checked="checked"
+      />
+      <label for="jeffstienstra/ckqxyevbn0mff17qgpmz4ned8">satellite</label>
+      <input id="jeffstienstra/ckqx6hkw40yp618mvdg4hbjoc" type="radio" name="rtoggle" value="terrain" />
+      <label for="jeffstienstra/ckqx6hkw40yp618mvdg4hbjoc">terrain</label>
+      <!-- <input id="jeffstienstra/ckqxyj14u1rsh17nvihai24i8" type="radio" name="rtoggle" value="dark" />
+      <label for="jeffstienstra/ckqxyj14u1rsh17nvihai24i8">dark</label> -->
+    </div>
+    <div id="map"></div>
+
+    <!-- \/  image carousel \/ -->
+    <div id="parkImages" class="carousel slide" data-bs-ride="carousel">
+      <div class="carousel-inner">
+        <div
+          class="carousel-item"
+          data-bs-interval="2000"
+          v-for="(currentImage, index) in currentImages"
+          :class="{ active: index == 0 }"
+          v-bind:key="currentImage.id"
+        >
+          <img
+            style="max-height: 500px; max-width: 1000px; object-fit: contain"
+            v-bind:src="currentImage"
+            v-bind:key="currentImage.id"
+            class="d-block w-100"
+            alt=""
+          />
+        </div>
+      </div>
+      <a class="carousel-control-prev" href="#parkImages" role="button" data-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="sr-only">Previous</span>
+      </a>
+      <a class="carousel-control-next" href="#parkImages" role="button" data-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="sr-only">Next</span>
+      </a>
+    </div>
+
+        <!-- \/  park details  \/ -->
+    <h3>About</h3>
+    <p>{{ currentPark.description }}</p>
+
+    <h3>Activities</h3>
+    <p>{{ currentActivities }}</p>
+
+    <h3>Weather</h3>
+    <p>{{ currentPark.weatherInfo }}</p>
+
+    <h3>Directions</h3>
+    <p>{{ currentPark.directionsInfo }}</p>
+
+    <h3>Entrance Fees</h3>
+    <p>{{ entranceFee }}</p>
+
+    <!-- <button>Close</button> -->
+  </form>
+</dialog>
+
+</div>

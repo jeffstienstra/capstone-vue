@@ -49,6 +49,8 @@
     <button v-on:click="parksIndex()" class="btn btn-primary btn-customized">Search</button>
 
     <p></p>
+
+    <!-- \/  display parks search results with aligned cards  \/ -->
     <div class="container">
       <div class="row row-cols-3">
         <div v-for="park in parks" v-bind:key="park.id" class="col">
@@ -60,10 +62,127 @@
               class="card-img-top"
               alt=""
             />
+
             <div class="card-body">
               <h5 class="card-title">{{ park.fullName }}</h5>
-              <a v-on:click="parksShow(park)" href="#" class="btn btn-primary">Details</a>
+              <!-- <a v-on:click="parksShow(park)" href="#" class="btn btn-primary">Details</a> -->
+              <button
+                v-on:click="parksShow(park)"
+                type="button"
+                class="btn btn-outline-primary"
+                data-bs-toggle="modal"
+                data-bs-target="#park-details-modal"
+              >
+                Details
+              </button>
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- \/  New Details Modal \/-->
+    <div
+      id="park-details-modal"
+      class="modal fade"
+      tabindex="-1"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <div style="overflow: auto" class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">{{ currentPark.fullName }}</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body"></div>
+
+          <!-- \/  park content goes here: decr, images, weather, etc  \/ -->
+
+          <!-- \/  image carousel \/ -->
+          <div id="parkImages" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+              <div
+                class="carousel-item"
+                data-bs-interval="2000"
+                v-for="(currentImage, index) in currentImages"
+                :class="{ active: index == 0 }"
+                v-bind:key="currentImage.id"
+              >
+                <img
+                  style="max-height: 250px; max-width: 450px; object-fit: contain"
+                  v-bind:src="currentImage"
+                  v-bind:key="currentImage.id"
+                  class="d-block w-100"
+                  alt=""
+                />
+              </div>
+            </div>
+            <a class="carousel-control-prev" href="#parkImages" role="button" data-slide="prev">
+              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+              <span class="sr-only">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#parkImages" role="button" data-slide="next">
+              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+              <span class="sr-only">Next</span>
+            </a>
+          </div>
+          <p></p>
+          <!-- \/  park details  \/ -->
+          <h3>About</h3>
+          <p>{{ currentPark.description }}</p>
+
+          <h3>Activities</h3>
+          <p>{{ currentActivities }}</p>
+
+          <h3>Weather</h3>
+          <p>{{ currentPark.weatherInfo }}</p>
+
+          <h3>Directions</h3>
+          <p>{{ currentPark.directionsInfo }}</p>
+
+          <h3>Entrance Fees</h3>
+          <p>{{ entranceFee }}</p>
+
+          <!-- \/ render Mapbox map  \/ -->
+          <div id="menu">
+            <input
+              id="jeffstienstra/ckqxyevbn0mff17qgpmz4ned8"
+              type="radio"
+              name="rtoggle"
+              value="satellite"
+              checked="checked"
+            />
+            <label for="jeffstienstra/ckqxyevbn0mff17qgpmz4ned8">satellite</label>
+            <input id="jeffstienstra/ckqx6hkw40yp618mvdg4hbjoc" type="radio" name="rtoggle" value="terrain" />
+            <label for="jeffstienstra/ckqx6hkw40yp618mvdg4hbjoc">terrain</label>
+            <!-- <input id="jeffstienstra/ckqxyj14u1rsh17nvihai24i8" type="radio" name="rtoggle" value="dark" />
+      <label for="jeffstienstra/ckqxyj14u1rsh17nvihai24i8">dark</label> -->
+          </div>
+          <div id="map"></div>
+
+          <!-- \/  modal close buttons  \/ -->
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+            <input
+              v-if="isLoggedIn()"
+              v-on:click="addFavorite(currentPark)"
+              type="button"
+              class="btn btn-success"
+              value="+Favorites"
+            />
+            <!-- \/  modal +favorites buttons  \/ -->
+            <button
+              v-if="!isLoggedIn()"
+              v-on:click="addFavorite(currentPark)"
+              type="button"
+              class="btn btn-success"
+              disabled
+            >
+              +Favorites
+            </button>
+
+            <p style="color: red" v-if="!isLoggedIn()">Please log in to use the 'Favorites' feature.</p>
           </div>
         </div>
       </div>
@@ -78,60 +197,13 @@
       </div>
       <p>________________________________________</p>
     </div> -->
-
-    <dialog id="park-details" style="width: 65%">
-      <form method="dialog">
-        <button float:right>Close</button>
-        <input v-on:click="addFavorite(currentPark)" type="button" value="+Favorites" />
-        <!-- <button type="button" class="close" data-dismiss="modal">Close</button> -->
-
-        <h1>{{ currentPark.fullName }}</h1>
-
-        <div id="menu">
-          <input
-            id="jeffstienstra/ckqxyevbn0mff17qgpmz4ned8"
-            type="radio"
-            name="rtoggle"
-            value="satellite"
-            checked="checked"
-          />
-          <label for="jeffstienstra/ckqxyevbn0mff17qgpmz4ned8">satellite</label>
-          <input id="jeffstienstra/ckqx6hkw40yp618mvdg4hbjoc" type="radio" name="rtoggle" value="terrain" />
-          <label for="jeffstienstra/ckqx6hkw40yp618mvdg4hbjoc">terrain</label>
-          <!-- <input id="jeffstienstra/ckqxyj14u1rsh17nvihai24i8" type="radio" name="rtoggle" value="dark" />
-          <label for="jeffstienstra/ckqxyj14u1rsh17nvihai24i8">dark</label> -->
-        </div>
-        <div id="map"></div>
-
-        <div v-for="currentImage in currentImages" v-bind:key="currentImage.id">
-          <img v-bind:src="currentImage" v-bind:key="currentImage.id" alt="" style="width: 50%" />
-        </div>
-
-        <h3>About</h3>
-        <p>{{ currentPark.description }}</p>
-
-        <h3>Activities</h3>
-        <p>{{ currentActivities }}</p>
-
-        <h3>Weather</h3>
-        <p>{{ currentPark.weatherInfo }}</p>
-
-        <h3>Directions</h3>
-        <p>{{ currentPark.directionsInfo }}</p>
-
-        <h3>Entrance Fees</h3>
-        <p>{{ entranceFee }}</p>
-
-        <!-- <button>Close</button> -->
-      </form>
-    </dialog>
-    <!-- \/ how to get the next 10 parks? \/ -->
-    <!-- <button v-on:click="moreParks()">more... ></button> -->
-    <!-- <a v-bind:href="`/parks/`">next</a> -->
   </div>
 </template>
 
 <style>
+.carousel-item img {
+  margin: auto;
+}
 .marker {
   background-image: url("https://res.cloudinary.com/nacho-files/image/upload/v1626207290/travlog%20logos/travlog_marker_wht_xxsm_1_vzs3fc.png");
   background-size: cover;
@@ -140,18 +212,20 @@
   border-radius: 50%;
   cursor: pointer;
 }
-
+.modal-content {
+  overflow-y: auto;
+}
 body {
   margin: 0;
   padding: 0;
 }
 
 #map {
-  position: relative;
-  height: 300px;
+  height: 100%;
   top: 0;
   bottom: 0;
-  width: 100%;
+  width: 100vw;
+  margin: auto;
 }
 
 .mapboxgl-popup {
@@ -177,12 +251,16 @@ export default {
       parkCode: "",
       image_url: "",
       entranceFee: {},
+      index: {},
     };
   },
 
   created: function () {},
 
   methods: {
+    isLoggedIn: function () {
+      return localStorage.getItem("jwt");
+    },
     // searchByState: function () {
     //   console.log("search by state ->", this.searchParams);
     // },
@@ -225,7 +303,7 @@ export default {
       this.entranceFee = entranceFee;
       this.currentActivities = activities.sort().join(", ");
 
-      document.querySelector("#park-details").showModal();
+      // document.querySelector("#park-details-modal").showModal();
 
       //    \/render map \/
       mapboxgl.accessToken = process.env.VUE_APP_MAPBOX_API_KEY;
@@ -249,7 +327,7 @@ export default {
         inputs[i].onclick = switchLayer;
       }
 
-      // create the popup
+      // create the map popup
       var popup = new mapboxgl.Popup({ offset: -5 }).setHTML(`<p><strong>${park.fullName}</strong><br>
       ${park.addresses[0]["line1"]}<br>${park.addresses[0]["city"]}, ${park.addresses[0]["stateCode"]} ${park.addresses[0]["postalCode"]}<br>
       Get driving directions <a href='${park.directionsUrl}' target="_blank">here</a></p>`);

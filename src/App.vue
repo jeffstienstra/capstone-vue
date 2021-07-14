@@ -3,7 +3,7 @@
     <!-- <span v-title data-title="traVlog"></span> -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
       <div class="container-fluid">
-        <a class="navbar-brand" href="/home"><img src="travlog_logo_35px.png" alt="" /></a>
+        <a class="navbar-brand" href="/"><img src="travlog_logo_35px.png" alt="" /></a>
         <button
           class="navbar-toggler"
           type="button"

@@ -4,7 +4,7 @@
     <p></p>
     <h2>Favorites</h2>
 
-    <!-- \/  cards  \/ -->
+    <!-- \/  show all favorites with tiled cards  \/ -->
     <div class="container">
       <div class="row row-cols-3">
         <div v-for="favorite in myFavorites" v-bind:key="favorite.id" class="col">
@@ -25,35 +25,39 @@
               <!-- \/  action buttons on card  \/ -->
               <div class="btn-group-sm" role="group" aria-label="Basic example">
                 <button v-on:click="destroyFavorite(favorite)" type="button" class="btn btn-outline-danger">X</button>
-                <button v-on:click="favoriteShow(favorite)" type="button" class="btn btn-outline-primary">
+                <button v-on:click="favoriteShow(favorite)" type="button" class="btn btn-outline-dark">
                   Park Info
                 </button>
-                <button v-on:click="showJournals(favorite)" type="button" class="btn btn-outline-primary">
+
+                <button
+                  v-on:click="showJournals(favorite)"
+                  type="button"
+                  class="btn btn-outline-dark"
+                  data-bs-toggle="modal"
+                  data-bs-target="#journals"
+                >
                   Journals
                 </button>
-                <button v-on:click="showCreateJournalModal(favorite)" type="button" class="btn btn-outline-primary">
+
+                <button v-on:click="showCreateJournalModal(favorite)" type="button" class="btn btn-outline-success">
                   +Journal
                 </button>
                 <button
                   v-if="favorite.journals.length > 0"
                   v-on:click="showFieldNotesMap(favorite)"
                   type="button"
-                  class="btn btn-outline-success"
+                  class="btn btn-outline-primary"
                 >
                   Travlog
                 </button>
               </div>
-              <!-- <a v-on:click="destroyFavorite(favorite)" href="#" class="btn btn-outline-danger">Remove</a>
-              <a v-on:click="favoriteShow(favorite)" href="#" class="btn btn-outline-dark">Details</a>
-              <a v-on:click="showJournals(favorite)" href="#" class="btn btn-outline-dark">Journals</a>
-              <a v-on:click="showCreateJournalModal(favorite)" href="#" class="btn btn-outline-dark">+Journal</a> -->
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <p>________________________________________</p>
+    <!-- <p>________________________________________</p>
     <div v-for="favorite in myFavorites" v-bind:key="favorite.id">
       <h3 style="color: #006400" v-if="favorite.visited">{{ favorite.park_name }}</h3>
       <h3 v-if="favorite.visited != true">{{ favorite.park_name }}</h3>
@@ -64,12 +68,10 @@
         <button v-on:click="showJournals(favorite)">Field Notes</button>
         <button v-on:click="showCreateJournalModal(favorite)">Add Field Note</button>
         <button v-if="favorite.journals.length > 0" v-on:click="showFieldNotesMap(favorite)">Field Note Map</button>
-        <!-- <p style="color: green" v-if="favorite.visited">
-          <strong>You've visited {{ favorite.park_name }}.</strong>
-        </p> -->
+       
         <p>________________________________________</p>
       </div>
-    </div>
+    </div> -->
 
     <!-- show favorite park details modal -->
     <dialog id="park-details" style="width: 60%">
@@ -121,31 +123,40 @@
       </form>
     </dialog>
 
-    <!-- display all journals of favorite park modal -->
-    <dialog id="journals" style="width: 60%">
-      <form method="dialog">
-        <h2 v-if="this.journals.length == 0">
-          Uh oh, you don't have any Field Notes for {{ this.favorite.park_name }}. Guess its time to travel!
-        </h2>
+    <!-- \/  show all journals of favorite with tiled cards  \/ -->
+    <div class="container">
+      <div id="journals" class="modal fade row" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div style="overflow: auto" class="modal-dialog modal-lg modal-dialog-centered">
+          <div class="modal-content">
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-header">
+              <div class="card">
+                <div v-for="journal in journals" v-bind:key="journal.id">
+                  <h5 class="modal-title" id="exampleModalLabel">{{ journal.date }}</h5>
+                  <img
+                    style="max-height: 250px; max-width: 450px; object-fit: contain"
+                    v-bind:src="journal.image"
+                    v-bind:key="journal.id"
+                    class="card-img-top"
+                    alt=""
+                  />
 
-        <div>
-          <button>Close</button>
+                  <h1>{{ journal.title }}</h1>
+
+                  <p>{{ journal.body }}</p>
+
+                  <div class="btn-group-sm" role="group" aria-label="Basic example">
+                    <button v-on:click="destroyJournal(journal)" type="button" class="btn btn-outline-danger">X</button>
+                    <button v-on:click="editJournal(journal)" type="button" class="btn btn-outline-dark">Edit</button>
+                  </div>
+                  <p>________________________________________</p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        <br />
-        <div v-for="journal in journals" v-bind:key="journal.id">
-          <img v-bind:src="journal.image" v-bind:key="journal.id" alt="" style="width: 50%" />
-
-          <p>{{ journal.date }}</p>
-
-          <h1>{{ journal.title }}</h1>
-
-          <p>{{ journal.body }}</p>
-          <button v-on:click="destroyJournal(journal)">Delete</button>
-          <button v-on:click="editJournal(journal)">Edit</button>
-          <p>________________________________________</p>
-        </div>
-      </form>
-    </dialog>
+      </div>
+    </div>
 
     <!-- journalCreate modal: add field note to a favorite park -->
     <dialog id="journal-create" style="width: 100%">
@@ -421,7 +432,7 @@ export default {
       this.favorite = favorite;
       console.log("all journals of this favorite", favorite);
       this.journals = favorite["journals"];
-      document.querySelector("#journals").showModal();
+      // document.querySelector("#journals").showModal();
     },
 
     createJournal: function (favorite) {

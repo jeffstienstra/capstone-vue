@@ -8,6 +8,10 @@
     </form>
 
     <h3>This is where you'll see a list of plants you've collected.</h3>
+
+    <p>{{ matchingPlant }}</p>
+    <br />
+    <p>{{ matchingPlant["images"] }}</p>
     <!-- plant.id results modal -->
     <dialog id="plant-results" style="width: 75%">
       <h1>hello</h1>
@@ -87,6 +91,7 @@ export default {
     return {
       latitude: {},
       longitude: {},
+      matchingPlant: {},
     };
   },
   created: function () {},
@@ -155,6 +160,8 @@ export default {
           .catch((error) => {
             console.error("Error:", error);
           });
+        this.matchingPlant = JSON.stringify(data);
+        console.log("this.matchingPlant", this.matchingPlant);
       });
     },
   },
