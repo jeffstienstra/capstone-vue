@@ -6,6 +6,7 @@
       <input type="file" accept="image/*" />
       <button v-on:click="getPlantId()" type="button">OK</button>
     </form>
+
     <h3>This is where you'll see a list of plants you've collected.</h3>
     <!-- plant.id results modal -->
     <dialog id="plant-results" style="width: 75%">
