@@ -1,15 +1,15 @@
 <template>
-  <div class="">
+  <div>
     <span v-title data-title="traVlog"></span>
+    <br />
+    <br />
+    <br />
+    <h1>Discover the outdoors.</h1>
+    <br />
+    <h1>Share your story.</h1>
+    <br />
 
-    <h1>Discover the outdoors. Share your story.</h1>
-
-    <!-- <md-button class="md-raised md-primary">Primary</md-button> -->
-
-    <!-- <h4 style="padding: 0px 100px, align: center"></h4> -->
-    <h2>
-      <router-link style="padding: 0px 10px" to="/parks">START EXPLORING</router-link>
-    </h2>
+    <button v-on:click="parksNav()" class="btn btn-outline-success btn-customized">START EXPLORING</button>
 
     <div>
       <br />
@@ -25,6 +25,10 @@
 #logo {
   width: 100vw;
 }
+#main {
+  background-image: "trees.jpg";
+  background-size: cover;
+}
 </style>
 
 <script>
@@ -36,6 +40,9 @@ export default {
   },
   created: function () {},
   methods: {
+    parksNav: function () {
+      this.$router.push("/parks");
+    },
     // searchByState: function () {
     //   console.log("search by state ->", this.searchParams);
     // },

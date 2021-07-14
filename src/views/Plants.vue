@@ -10,6 +10,7 @@
     <h3>This is where you'll see a list of plants you've collected.</h3>
 
     <p>{{ match }}</p>
+    <p>{{ probability }}</p>
     <p>{{ image }}</p>
     <br />
     <!-- plant.id results modal -->
@@ -94,6 +95,7 @@ export default {
       matchingPlant: {},
       match: {},
       image: "",
+      probability: "",
     };
   },
   created: function () {},
@@ -160,6 +162,7 @@ export default {
             console.log("Success:", data);
             this.match = data.suggestions[0]["plant_details"];
             this.image = data.suggestions[0]["similar_images"][0]["url"];
+            this.probability = data.suggestions[0]["probability"];
           })
           .catch((error) => {
             console.error("Error:", error);
