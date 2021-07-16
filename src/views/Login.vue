@@ -13,7 +13,9 @@
             <!-- Form -->
             <form class="form-example" action="" method="">
               <h1>Login</h1>
-              <p class="description">Welcome back!</p>
+              <br />
+              <h4 class="description">Welcome back!</h4>
+              <br />
               <!-- Input fields -->
               <div class="form-group">
                 <div class="form-floating mb-3">
@@ -34,7 +36,7 @@
         </div>
       </div>
 
-      <button type="submit" value="Submit" class="btn btn-primary btn-customized">Login</button>
+      <button type="submit" value="Submit" class="btn btn-outline-primary btn-customized">Login</button>
       <p>
         <a href="https://jeffstienstra.github.io/">Forgot password?</a>
       </p>

@@ -46,7 +46,7 @@
       </div>
     </div>
 
-    <button v-on:click="parksIndex()" class="btn btn-primary btn-customized">Search</button>
+    <button v-on:click="parksIndex()" class="btn btn-outline-success btn-customized">Search</button>
 
     <p></p>
 

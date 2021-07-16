@@ -30,6 +30,7 @@
                 </button>
 
                 <button
+                  v-if="favorite.journals.length > 0"
                   v-on:click="showJournals(favorite)"
                   type="button"
                   class="btn btn-outline-dark"
@@ -183,6 +184,7 @@
           <label>Longitude:</label>
           <input type="text" v-model="longitude" />
         </div>
+
         <div>
           <label>Date:</label>
           <input type="text" v-model="date" />
@@ -212,6 +214,14 @@
         <div>
           <label>Date:</label>
           <input type="text" v-model="updateJournalParams.date" />
+        </div>
+        <div>
+          <label>Latitude:</label>
+          <input type="text" v-model="favorite.latitude" />
+        </div>
+        <div>
+          <label>Longitude:</label>
+          <input type="text" v-model="favorite.longitude" />
         </div>
         <div>
           <label>Title:</label>

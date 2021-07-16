@@ -24,7 +24,7 @@
               <a v-if="isLoggedIn()" class="nav-link" href="/favorites"><strong>Favorites</strong></a>
             </li>
             <li class="nav-item">
-              <a v-if="isLoggedIn()" class="nav-link" href="/plants"><strong>Plants</strong></a>
+              <a v-if="isLoggedIn()" class="nav-link" href="/plants"><strong>Collections</strong></a>
             </li>
             <li class="nav-item">
               <a v-if="!isLoggedIn()" class="nav-link" href="/login"><strong>Login</strong></a>

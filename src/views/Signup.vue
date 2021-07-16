@@ -1,7 +1,49 @@
 <template>
   <div class="signup">
     <span v-title data-title="traVlog"></span>
-    <form v-on:submit.prevent="submit()">
+
+    <div class="container h-100">
+      <form v-on:submit.prevent="submit()">
+        <ul>
+          <li v-for="error in errors" v-bind:key="error">{{ error }}</li>
+        </ul>
+        <div class="row h-100 justify-content-center align-items-center">
+          <div class="col-10 col-md-8 col-lg-6">
+            <!-- Form -->
+            <form class="form-example" action="" method="">
+              <b></b>
+              <h1>Signup</h1>
+              <br />
+              <h4 class="description">Start sharing your story!</h4>
+              <br />
+              <!-- Input fields -->
+              <div class="form-group">
+                <div class="form-floating mb-3">
+                  <input type="email" v-model="email" class="form-control" placeholder="email address" />
+                  <label for="floatingInput">Email address</label>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="form-floating mb-3">
+                  <input type="password" v-model="password" class="form-control" placeholder="password" />
+                  <label for="floatingInput">Password</label>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="form-floating mb-3">
+                  <input type="password" v-model="password_confirmation" class="form-control" placeholder="password" />
+                  <label for="floatingInput">Password confirmation</label>
+                </div>
+              </div>
+              <!-- End input fields -->
+            </form>
+            <!-- Form end -->
+          </div>
+        </div>
+      </form>
+    </div>
+    <button type="submit" value="Submit" class="btn btn-outline-primary btn-customized">Signup</button>
+    <!-- <form v-on:submit.prevent="submit()">
       <h1>Signup</h1>
       <ul>
         <li v-for="error in errors" v-bind:key="error">{{ error }}</li>
@@ -23,7 +65,7 @@
         <input type="password" v-model="password_confirmation" />
       </div>
       <input type="submit" value="Submit" />
-    </form>
+    </form> -->
   </div>
 </template>
 
