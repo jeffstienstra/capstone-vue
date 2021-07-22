@@ -25,9 +25,7 @@
               <!-- \/  action buttons on card  \/ -->
               <div class="btn-group-sm" role="group" aria-label="Basic example">
                 <button v-on:click="destroyFavorite(favorite)" type="button" class="btn btn-outline-danger">X</button>
-                <button v-on:click="favoriteShow(favorite)" type="button" class="btn btn-outline-dark">
-                  Park Info
-                </button>
+                <button v-on:click="favoriteShow(favorite)" type="button" class="btn btn-outline-dark">Details</button>
 
                 <button
                   v-if="favorite.journals.length > 0"
